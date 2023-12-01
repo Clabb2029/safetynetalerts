@@ -22,14 +22,14 @@ public class PersonController {
         return personService.createPerson(person);
     }
 
-    @PutMapping("/persons/{personFullName}")
-    public Person updatePerson(@PathVariable String personFullName, @RequestBody Person person) {
-        return personService.updatePerson(personFullName, person);
+    @PutMapping("/persons/{lastName}/{firstName}")
+    public Person updatePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody Person person) {
+        return personService.updatePerson(lastName, firstName, person);
     }
 
-    @DeleteMapping("/persons/{personFullName}")
-    public boolean deletePerson(@PathVariable String personFullName){
-        return personService.deletePerson(personFullName);
+    @DeleteMapping("/persons/{lastName}/{firstName}")
+    public boolean deletePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
+        return personService.deletePerson(lastName, firstName);
     }
 
 }

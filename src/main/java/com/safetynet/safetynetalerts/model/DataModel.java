@@ -22,6 +22,10 @@ public class DataModel {
         persons = personsList;
     }
 
+    public void addPerson(Person person) {
+        persons.add(person);
+    }
+
     public List<Firestation> getFirestations(){
         return firestations;
     }

@@ -2,28 +2,53 @@ package com.safetynet.safetynetalerts.repository;
 
 import com.safetynet.safetynetalerts.model.DataModel;
 import com.safetynet.safetynetalerts.model.Person;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
 @Repository
 public class PersonRepository {
 
+    public static DataModel dataModel = new DataModel();
+
     public List<Person> findAll() {
-        return DataModel.persons;
+        return dataModel.getPersons();
     }
 
     public Person save(Person person) {
-        return null;
+        dataModel.addPerson(person);
+        return person;
     }
 
-    public Person update(String fullName, Person person) {
-        return null;
+    public Person update(String lastName, String firstName, Person person) throws IndexOutOfBoundsException {
+        Person fetchedPerson = findByFullName(lastName, firstName);
+        if(ObjectUtils.isEmpty(fetchedPerson)) {
+            return null;
+        } else {
+            fetchedPerson.setAddress(person.getAddress());
+            fetchedPerson.setCity(person.getCity());
+            fetchedPerson.setZip(person.getZip());
+            fetchedPerson.setPhone(person.getPhone());
+            fetchedPerson.setEmail(person.getEmail());
+            return fetchedPerson;
+        }
     }
 
-    public boolean delete(String fullName) {
-        return true;
+    public Person findByFullName(String firstName, String lastName) {
+        return dataModel.getPersons().stream()
+                .filter(person -> (
+                        person.getFirstName().equals(firstName) && person.getLastName().equals(lastName))
+                ).findAny().orElseThrow();
+    }
+
+    public boolean delete(String lastName, String firstName) {
+        Person fetchedPerson = findByFullName(lastName, firstName);
+        if(ObjectUtils.isEmpty(fetchedPerson)) {
+            return false;
+        } else {
+            return dataModel.getPersons().remove(fetchedPerson);
+        }
     }
 
 }

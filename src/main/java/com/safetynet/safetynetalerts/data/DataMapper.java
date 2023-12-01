@@ -23,10 +23,6 @@ public class DataMapper {
         InputStream filePath = new FileInputStream("src/main/resources/data/data.json");
         DataModel data = new DataModel();
         data = mapper.readValue(filePath, DataModel.class);
-
-        System.out.println(DataModel.persons);
-        System.out.println(DataModel.firestations);
-        System.out.println(DataModel.medicalRecords);
     }
 
 }
