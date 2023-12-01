@@ -9,10 +9,10 @@ import java.util.List;
 @RestController
 public class MedicalRecordController {
 
-/*    @Autowired
-    private MedicalRecordService medicalRecordService;*/
+    @Autowired
+    private MedicalRecordService medicalRecordService;
 
-   /* @GetMapping("/medicalRecords")
+    @GetMapping("/medicalRecords")
     public List<MedicalRecord> getAllMedicalRecords() {
         return medicalRecordService.getAllMedicalRecords();
     }
@@ -22,14 +22,14 @@ public class MedicalRecordController {
         return medicalRecordService.createMedicalRecord(medicalRecord);
     }
 
-    @PutMapping("/medicalRecords/{personFullName}")
-    public MedicalRecord updateMedicalRecord(@PathVariable String personFullName, @RequestBody MedicalRecord medicalRecord) {
-        return medicalRecordService.updateMedicalRecord(personFullName, medicalRecord);
+    @PutMapping("/medicalRecords/{lastName}/{firstName}")
+    public MedicalRecord updateMedicalRecord(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody MedicalRecord medicalRecord) {
+        return medicalRecordService.updateMedicalRecord(lastName, firstName, medicalRecord);
     }
 
-    @DeleteMapping("/medicalRecords/{personFullName}")
-    public boolean deleteMedicalRecord(@PathVariable String personFullName){
-        return medicalRecordService.deleteMedicalRecord(personFullName);
-    }*/
+    @DeleteMapping("/medicalRecords/{lastName}/{firstName}")
+    public boolean deleteMedicalRecord(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
+        return medicalRecordService.deleteMedicalRecord(lastName, firstName);
+    }
 
 }

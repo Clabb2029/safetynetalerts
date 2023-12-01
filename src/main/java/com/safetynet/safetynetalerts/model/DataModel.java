@@ -42,4 +42,8 @@ public class DataModel {
         medicalRecords = medicalRecordsList;
     }
 
+    public void addMedicalRecord(MedicalRecord medicalRecord) {
+        medicalRecords.add(medicalRecord);
+    }
+
 }
