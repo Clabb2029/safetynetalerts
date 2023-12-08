@@ -1,34 +1,44 @@
 package com.safetynet.safetynetalerts.repository;
 
+import com.safetynet.safetynetalerts.model.DataModel;
 import com.safetynet.safetynetalerts.model.Firestation;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 
+@Repository
 public class FirestationRepository {
 
-    public List<Firestation> firestationsList;
+    public static DataModel dataModel = new DataModel();
 
-    public void setFirestationsList(List<Firestation> firestations) {
-        firestationsList = firestations;
+    public List<Firestation> findAll() {
+        return dataModel.getFirestations();
     }
 
+    public Firestation save(Firestation firestation) {
+        dataModel.addFirestation(firestation);
+        return firestation;
+    }
 
+    public Firestation updateStation(String address, Firestation firestation) {
+        Firestation fetchedFirestation = dataModel.getFirestations().stream().filter(f -> (
+                f.getAddress().equals(address))).findAny().orElseThrow();
+        if(ObjectUtils.isEmpty(fetchedFirestation)) {
+            return null;
+        } else {
+            fetchedFirestation.setStation(firestation.getStation());
+            return fetchedFirestation;
+        }
+    }
 
-
-
-    // retourner une liste de personnes en fonction du numéro de station donné
-    // retourne précisément : prénom, nom, adresse, téléphone de chacun + le nombre d'adultes et d'enfants (18 ans ou moins)
-
-
-    // retourner une liste d'enfants (18 ans ou moins) habitant à l'adresse donnée
-    // retourne précisément : prénom, nom, âge, liste des autres membres du foyer pour chacun. Si pas d'enfant, url renvoie une chaîne vide
-
-
-    // retourner une liste des numéros de téléphone des résidents désservis par le numéro de station donné
-
-
-    // retourner la liste des habitants vivant à l'adresse donnée  et le numéro de la caserne de pompier la desservant
-    // retourne précisément : nom, prénom, téléphone, âge, antécédents médicaux (médicaments, posologie et allergies) pour chacun
-
-    // retourner la liste de tous les foyers desservis par la station
+    public boolean delete(String address, String station) {
+        Firestation fetchedFirestation = dataModel.getFirestations().stream().filter(f -> (
+                f.getAddress().equals(address) && f.getStation().equals(station))).findAny().orElseThrow();
+        if(ObjectUtils.isEmpty(fetchedFirestation)) {
+            return false;
+        } else {
+            return dataModel.getFirestations().remove(fetchedFirestation);
+        }
+    }
 }

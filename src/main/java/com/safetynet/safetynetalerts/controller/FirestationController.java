@@ -13,9 +13,9 @@ public class FirestationController {
     @Autowired
     private FirestationService firestationService;
 
-  /*  @GetMapping("/firestations")
+    @GetMapping("/firestations")
     public List<Firestation> getFirestations(){
-        return firestationService.getFirestations();
+        return firestationService.getAllFirestations();
     }
 
     @PostMapping("/firestations")
@@ -23,17 +23,13 @@ public class FirestationController {
         return firestationService.createFirestation(firestation);
     }
 
-    @PutMapping("/firestations/{stationNumber}")
-    public Firestation updateFirestation(@PathVariable String stationNumber, @RequestBody Firestation firestation) {
-        return firestationService.updateFirestation(stationNumber, firestation);
+    @PutMapping("/firestations/{address}")
+    public Firestation updateFirestationStation(@PathVariable String address, @RequestBody Firestation firestation) {
+        return firestationService.updateFirestationStation(address, firestation);
     }
 
-    @DeleteMapping("/firestations/{stationNumber}")
-    public void deleteFirestation(@PathVariable String stationNumber){
-        return firestationService.deleteFirestation(stationNumber);
-    }*/
-
-
-
-
+    @DeleteMapping("/firestations/{address}/{station}")
+    public boolean deleteFirestation(@PathVariable String address, @PathVariable String station){
+        return firestationService.deleteFirestation(address, station);
+    }
 }

@@ -34,6 +34,11 @@ public class DataModel {
         firestations = firestationsList;
     }
 
+    public void addFirestation(Firestation firestation) {
+        firestations.add(firestation);
+    }
+
+
     public List<MedicalRecord> getMedicalRecords(){
         return medicalRecords;
     }
