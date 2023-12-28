@@ -18,23 +18,24 @@ public class FirestationRepository {
 
     public Firestation save(Firestation firestation) {
         dataModel.addFirestation(firestation);
-        return firestation;
+        return dataModel.getFirestations().stream().filter(f -> (
+                f.getAddress().equals(firestation.getAddress())
+                && f.getStation().equals(firestation.getStation())
+        )).findAny().orElse(null);
     }
 
     public Firestation updateStation(String address, Firestation firestation) {
         Firestation fetchedFirestation = dataModel.getFirestations().stream().filter(f -> (
-                f.getAddress().equals(address))).findAny().orElseThrow();
-        if(ObjectUtils.isEmpty(fetchedFirestation)) {
-            return null;
-        } else {
+                f.getAddress().equals(address))).findAny().orElse(null);
+        if (!ObjectUtils.isEmpty(fetchedFirestation)) {
             fetchedFirestation.setStation(firestation.getStation());
-            return fetchedFirestation;
         }
+        return fetchedFirestation;
     }
 
     public boolean delete(String address, String station) {
         Firestation fetchedFirestation = dataModel.getFirestations().stream().filter(f -> (
-                f.getAddress().equals(address) && f.getStation().equals(station))).findAny().orElseThrow();
+                f.getAddress().equals(address) && f.getStation().equals(station))).findAny().orElse(null);
         if(ObjectUtils.isEmpty(fetchedFirestation)) {
             return false;
         } else {

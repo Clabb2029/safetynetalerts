@@ -18,28 +18,34 @@ public class PersonRepository {
 
     public Person save(Person person) {
         dataModel.addPerson(person);
-        return person;
+        return dataModel.getPersons().stream().filter(f -> (
+                f.getFirstName().equals(person.getFirstName())
+                && f.getLastName().equals(person.getLastName())
+                && f.getAddress().equals(person.getAddress())
+                && f.getCity().equals(person.getCity())
+                && f.getZip().equals(person.getZip())
+                && f.getPhone().equals(person.getPhone())
+                && f.getEmail().equals(person.getEmail())
+        )).findAny().orElse(null);
     }
 
-    public Person update(String lastName, String firstName, Person person) throws IndexOutOfBoundsException {
+    public Person update(String lastName, String firstName, Person person) {
         Person fetchedPerson = findByFullName(lastName, firstName);
-        if(ObjectUtils.isEmpty(fetchedPerson)) {
-            return null;
-        } else {
+        if(!ObjectUtils.isEmpty(fetchedPerson)) {
             fetchedPerson.setAddress(person.getAddress());
             fetchedPerson.setCity(person.getCity());
             fetchedPerson.setZip(person.getZip());
             fetchedPerson.setPhone(person.getPhone());
             fetchedPerson.setEmail(person.getEmail());
-            return fetchedPerson;
         }
+        return fetchedPerson;
     }
 
     public Person findByFullName(String firstName, String lastName) {
         return dataModel.getPersons().stream()
                 .filter(person -> (
                         person.getFirstName().equals(firstName) && person.getLastName().equals(lastName))
-                ).findAny().orElseThrow();
+                ).findAny().orElse(null);
     }
 
     public boolean delete(String lastName, String firstName) {

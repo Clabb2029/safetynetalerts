@@ -18,26 +18,30 @@ public class MedicalRecordRepository {
 
     public MedicalRecord save(MedicalRecord medicalRecord) {
         dataModel.addMedicalRecord(medicalRecord);
-        return medicalRecord;
+        return dataModel.getMedicalRecords().stream().filter(f -> (
+                f.getFirstName().equals(medicalRecord.getFirstName())
+                && f.getLastName().equals(medicalRecord.getLastName())
+                && f.getBirthdate().equals(medicalRecord.getBirthdate())
+                && f.getMedications().equals(medicalRecord.getMedications())
+                && f.getAllergies().equals(medicalRecord.getAllergies())
+        )).findAny().orElse(null);
     }
 
-    public MedicalRecord update(String lastName, String firstName, MedicalRecord medicalRecord) throws IndexOutOfBoundsException {
+    public MedicalRecord update(String lastName, String firstName, MedicalRecord medicalRecord) {
         MedicalRecord fetchedMedicalRecord = findByFullName(lastName, firstName);
-        if(ObjectUtils.isEmpty(fetchedMedicalRecord)) {
-            return null;
-        } else {
+        if(!ObjectUtils.isEmpty(fetchedMedicalRecord)) {
             fetchedMedicalRecord.setBirthdate(medicalRecord.getBirthdate());
             fetchedMedicalRecord.setMedications(medicalRecord.getMedications());
             fetchedMedicalRecord.setAllergies(medicalRecord.getAllergies());
-            return fetchedMedicalRecord;
         }
+        return fetchedMedicalRecord;
     }
 
     public MedicalRecord findByFullName(String firstName, String lastName) {
         return dataModel.getMedicalRecords().stream()
                 .filter(medicalRecord -> (
                         medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName))
-                ).findAny().orElseThrow();
+                ).findAny().orElse(null);
     }
 
     public boolean delete(String lastName, String firstName) {
