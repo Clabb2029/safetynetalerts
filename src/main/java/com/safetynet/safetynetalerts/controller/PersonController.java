@@ -2,6 +2,8 @@ package com.safetynet.safetynetalerts.controller;
 
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.service.PersonService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -12,24 +14,50 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
+    private static final Logger logger = LogManager.getLogger(MedicalRecordController.class);
+
     @GetMapping("/persons")
     public List<Person> getAllPerson(){
-        return personService.getAllPersons();
+        List<Person> returnedPersonsArray = personService.getAllPersons();
+        if(!returnedPersonsArray.isEmpty()) {
+            logger.info("Persons list fetched successfully.");
+        } else {
+            logger.error("There was an error when fetching the persons list.");
+        }
+        return returnedPersonsArray;
     }
 
     @PostMapping("/persons")
     public Person createPerson(@RequestBody Person person) {
-        return personService.createPerson(person);
+        Person returnedPerson = personService.createPerson(person);
+        if(returnedPerson != null) {
+            logger.info("Person created successfully.");
+        } else {
+            logger.error("There was an error when creating the person.");
+        }
+        return returnedPerson;
     }
 
     @PutMapping("/persons/{lastName}/{firstName}")
     public Person updatePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody Person person) {
-        return personService.updatePerson(lastName, firstName, person);
+        Person returnedPerson = personService.updatePerson(lastName, firstName, person);
+        if (returnedPerson != null) {
+            logger.info("Person updated successfully.");
+        } else {
+            logger.error("There was an error when updating the person.");
+        }
+        return returnedPerson;
     }
 
     @DeleteMapping("/persons/{lastName}/{firstName}")
     public boolean deletePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
-        return personService.deletePerson(lastName, firstName);
+        boolean isPersonDeleted = personService.deletePerson(lastName, firstName);
+        if (isPersonDeleted) {
+            logger.info("Person deleted successfully.");
+        } else {
+            logger.error("There was an error when deleting the person.");
+        }
+        return isPersonDeleted;
     }
 
 }
