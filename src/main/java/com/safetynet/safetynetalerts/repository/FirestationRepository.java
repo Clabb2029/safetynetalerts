@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.model.Firestation;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -41,5 +42,15 @@ public class FirestationRepository {
         } else {
             return dataModel.getFirestations().remove(fetchedFirestation);
         }
+    }
+
+    public List<String> findAllByStationNumber(String stationNumber) {
+        List<String> firestationAddressList = new ArrayList<>();
+        dataModel.getFirestations().forEach(firestation -> {
+            if (firestation.getStation().equals(stationNumber)) {
+                firestationAddressList.add(firestation.getAddress());
+            }
+        });
+        return firestationAddressList;
     }
 }

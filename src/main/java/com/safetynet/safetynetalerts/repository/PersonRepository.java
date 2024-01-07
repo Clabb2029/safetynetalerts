@@ -1,10 +1,12 @@
 package com.safetynet.safetynetalerts.repository;
 
+import com.safetynet.safetynetalerts.DTO.PersonDTO;
 import com.safetynet.safetynetalerts.model.DataModel;
 import com.safetynet.safetynetalerts.model.Person;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -57,4 +59,29 @@ public class PersonRepository {
         }
     }
 
+    public List<PersonDTO> findAllByAddress(List<String> addressList) {
+        List<PersonDTO> personsDTOList = new ArrayList<>();
+        dataModel.getPersons().forEach(person -> {
+            addressList.forEach(address -> {
+                if (person.getAddress().equals(address)){
+                    PersonDTO personDTO = new PersonDTO();
+                    personDTO.setFirstName(person.getFirstName());
+                    personDTO.setLastName(person.getLastName());
+                    personDTO.setAddress(person.getAddress());
+                    personDTO.setCity(person.getCity());
+                    personDTO.setZip(person.getZip());
+                    personDTO.setPhone(person.getPhone());
+                    personsDTOList.add(personDTO);
+                }
+            });
+        });
+        return personsDTOList;
+    }
+
 }
+
+
+
+
+
+
