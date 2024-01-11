@@ -2,6 +2,7 @@ package com.safetynet.safetynetalerts.controller;
 
 
 import com.safetynet.safetynetalerts.DTO.PersonCountDTO;
+import com.safetynet.safetynetalerts.DTO.HomeMemberDTO;
 import com.safetynet.safetynetalerts.service.URLService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +21,6 @@ public class URLController {
 
     @GetMapping("/firestation")
     public PersonCountDTO getPersonsAndCountFromStationNumber(@RequestParam String stationNumber) {
-        urlService.getPersonsAndCountFromStationNumber(stationNumber);
         PersonCountDTO personCountDTO = urlService.getPersonsAndCountFromStationNumber(stationNumber);
         if(personCountDTO != null) {
             logger.info("Persons list and adults/children count fetched successfully.");
@@ -29,4 +29,16 @@ public class URLController {
         }
         return personCountDTO;
     }
+
+    @GetMapping("/childAlert")
+    public HomeMemberDTO getChildrenAndFamilyMembersFromAddress(@RequestParam String address) {
+        HomeMemberDTO homeMemberDTO = urlService.getChildrenAndFamilyMembersFromAddress(address);
+        if (homeMemberDTO != null) {
+            logger.info("Children list and other family members fetched successfully.");
+        } else {
+            logger.error("There was an error when fetching the children list and other family members.");
+        }
+        return homeMemberDTO;
+    }
+
 }

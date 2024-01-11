@@ -68,6 +68,18 @@ public class MedicalRecordRepository {
         return medicalRecordsList;
     }
 
+    public List<MedicalRecord> findAllByNames(List<Person> personList) {
+        List<MedicalRecord> medicalRecordList = new ArrayList<>();
+        dataModel.getMedicalRecords().forEach(medicalRecord -> {
+            personList.forEach(person -> {
+                if (medicalRecord.getFirstName().equals(person.getFirstName()) && medicalRecord.getLastName().equals(person.getLastName())) {
+                    medicalRecordList.add(medicalRecord);
+                }
+            });
+        });
+        return medicalRecordList;
+    }
+
 }
 
 

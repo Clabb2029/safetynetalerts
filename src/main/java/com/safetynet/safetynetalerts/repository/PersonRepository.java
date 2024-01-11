@@ -59,7 +59,7 @@ public class PersonRepository {
         }
     }
 
-    public List<PersonDTO> findAllByAddress(List<String> addressList) {
+    public List<PersonDTO> findAllByAddressList(List<String> addressList) {
         List<PersonDTO> personsDTOList = new ArrayList<>();
         dataModel.getPersons().forEach(person -> {
             addressList.forEach(address -> {
@@ -76,6 +76,16 @@ public class PersonRepository {
             });
         });
         return personsDTOList;
+    }
+
+    public List<Person> findAllByAddress(String address) {
+        List<Person> personsList = new ArrayList<>();
+        dataModel.getPersons().forEach(person -> {
+            if(person.getAddress().equals(address)) {
+                personsList.add(person);
+            }
+        });
+        return personsList;
     }
 
 }
