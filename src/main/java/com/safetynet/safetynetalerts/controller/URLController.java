@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class URLController {
 
@@ -20,8 +22,8 @@ public class URLController {
     private static final Logger logger = LogManager.getLogger(URLController.class);
 
     @GetMapping("/firestation")
-    public PersonCountDTO getPersonsAndCountFromStationNumber(@RequestParam String stationNumber) {
-        PersonCountDTO personCountDTO = urlService.getPersonsAndCountFromStationNumber(stationNumber);
+    public PersonCountDTO getPersonsAndCountFromStationNumber(@RequestParam String station_number) {
+        PersonCountDTO personCountDTO = urlService.getPersonsAndCountFromStationNumber(station_number);
         if(personCountDTO != null) {
             logger.info("Persons list and adults/children count fetched successfully.");
         } else {
@@ -39,6 +41,17 @@ public class URLController {
             logger.error("There was an error when fetching the children list and other family members.");
         }
         return homeMemberDTO;
+    }
+
+    @GetMapping("/phoneAlert")
+    public List<String> getPhoneListFromFirestationNumber(@RequestParam String firestation_number){
+        List<String> phoneList = urlService.getPhoneListFromFirestationNumber(firestation_number);
+        if (!phoneList.isEmpty()){
+            logger.info("Phone list from firestation number fetched successfully.");
+        } else {
+            logger.info("There was an error when fetching the phone list from firestation number.");
+        }
+        return phoneList;
     }
 
 }

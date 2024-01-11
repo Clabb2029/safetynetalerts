@@ -30,6 +30,11 @@ public class URLService {
 
     LocalDate today = LocalDate.now();
 
+    public LocalDate convertStringDate(String dateToConvert) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        return LocalDate.parse(dateToConvert, formatter);
+    }
+
     public PersonCountDTO getPersonsAndCountFromStationNumber(String stationNumber) {
         int adultsCount = 0;
         int childrenCount = 0;
@@ -64,11 +69,6 @@ public class URLService {
             personCountDTO = null;
         }
         return personCountDTO;
-    }
-
-    public LocalDate convertStringDate(String dateToConvert) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        return LocalDate.parse(dateToConvert, formatter);
     }
 
     public HomeMemberDTO getChildrenAndFamilyMembersFromAddress(String address) {
@@ -116,6 +116,22 @@ public class URLService {
             homeMemberDTO = null;
         }
         return homeMemberDTO;
+    }
+
+    public List<String> getPhoneListFromFirestationNumber(String firestationNumber){
+        List<String> phoneList = new ArrayList<>();
+        List<String> addressList = firestationRepository.findAllByStationNumber(firestationNumber);
+
+        if (!addressList.isEmpty()) {
+            List<PersonDTO> personsDTOList = personRepository.findAllByAddressList(addressList);
+
+            if (!personsDTOList.isEmpty()) {
+                for (PersonDTO personDTO : personsDTOList) {
+                    phoneList.add(personDTO.getPhone());
+                }
+            }
+        }
+        return phoneList;
     }
 
 }
