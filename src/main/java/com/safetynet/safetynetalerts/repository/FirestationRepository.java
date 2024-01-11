@@ -53,4 +53,12 @@ public class FirestationRepository {
         });
         return firestationAddressList;
     }
+
+    public Firestation findOneByAddress(String address) {
+        return dataModel.getFirestations().stream().filter(
+                firestation -> (
+                        firestation.getAddress().equals(address)
+                )
+        ).findAny().orElse(null);
+    }
 }

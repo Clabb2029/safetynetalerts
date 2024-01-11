@@ -3,6 +3,7 @@ package com.safetynet.safetynetalerts.controller;
 
 import com.safetynet.safetynetalerts.DTO.PersonCountDTO;
 import com.safetynet.safetynetalerts.DTO.HomeMemberDTO;
+import com.safetynet.safetynetalerts.DTO.PersonMedicalHistoryListDTO;
 import com.safetynet.safetynetalerts.service.URLService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +36,7 @@ public class URLController {
     @GetMapping("/childAlert")
     public HomeMemberDTO getChildrenAndFamilyMembersFromAddress(@RequestParam String address) {
         HomeMemberDTO homeMemberDTO = urlService.getChildrenAndFamilyMembersFromAddress(address);
-        if (homeMemberDTO != null) {
+        if (homeMemberDTO.getHomeChildDTOList() != null && homeMemberDTO.getHomeOtherMemberDTOList() != null) {
             logger.info("Children list and other family members fetched successfully.");
         } else {
             logger.error("There was an error when fetching the children list and other family members.");
@@ -52,6 +53,17 @@ public class URLController {
             logger.info("There was an error when fetching the phone list from firestation number.");
         }
         return phoneList;
+    }
+
+    @GetMapping("/fire")
+    public PersonMedicalHistoryListDTO getResidentsMedicalHistoryFromAddress(@RequestParam String address) {
+        PersonMedicalHistoryListDTO personMedicalHistoryListDTO = urlService.getResidentsMedicalHistoryFromAddress(address);
+        if(personMedicalHistoryListDTO.getPersonMedicalHistoryDTOList() != null || personMedicalHistoryListDTO.getStation() != null) {
+            logger.info("Residents information and medical history fetched successfully.");
+        } else {
+            logger.info("There was an error when fetching the residents information and medical history");
+        }
+        return personMedicalHistoryListDTO;
     }
 
 }

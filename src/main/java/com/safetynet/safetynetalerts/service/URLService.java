@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.service;
 
 import com.safetynet.safetynetalerts.DTO.*;
+import com.safetynet.safetynetalerts.model.Firestation;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
 import com.safetynet.safetynetalerts.repository.FirestationRepository;
@@ -109,11 +110,7 @@ public class URLService {
                 }
                 homeMemberDTO.setHomeChildDTOList(homeChildDTOList);
                 homeMemberDTO.setHomeOtherMemberDTOList(homeOtherMemberDTOList);
-            } else {
-                homeMemberDTO = null;
             }
-        } else {
-            homeMemberDTO = null;
         }
         return homeMemberDTO;
     }
@@ -132,6 +129,38 @@ public class URLService {
             }
         }
         return phoneList;
+    }
+
+    public PersonMedicalHistoryListDTO getResidentsMedicalHistoryFromAddress(String address){
+        List<Person> personList = personRepository.findAllByAddress(address);
+        Firestation firestation = firestationRepository.findOneByAddress(address);
+        PersonMedicalHistoryListDTO personMedicalHistoryListDTO = new PersonMedicalHistoryListDTO();
+        List<PersonMedicalHistoryDTO> personMedicalHistoryDTOList = new ArrayList<>();
+
+        if(!personList.isEmpty() && firestation != null) {
+            List<MedicalRecord> medicalRecordList = medicalRecordRepository.findAllByNames(personList);
+
+            if (!medicalRecordList.isEmpty()) {
+                for(MedicalRecord medicalRecord : medicalRecordList) {
+                    for (Person person : personList) {
+                        if(person.getLastName().equals(medicalRecord.getLastName()) && person.getFirstName().equals(medicalRecord.getFirstName())) {
+                            PersonMedicalHistoryDTO personMedicalHistoryDTO = new PersonMedicalHistoryDTO();
+                            int age = Period.between(convertStringDate(medicalRecord.getBirthdate()), today).getYears();
+                            personMedicalHistoryDTO.setFirstName(person.getFirstName());
+                            personMedicalHistoryDTO.setLastName(person.getLastName());
+                            personMedicalHistoryDTO.setPhone(person.getPhone());
+                            personMedicalHistoryDTO.setAge(age);
+                            personMedicalHistoryDTO.setMedications(medicalRecord.getMedications());
+                            personMedicalHistoryDTO.setAllergies(medicalRecord.getAllergies());
+                            personMedicalHistoryDTOList.add(personMedicalHistoryDTO);
+                        }
+                    }
+                    personMedicalHistoryListDTO.setPersonMedicalHistoryDTOList(personMedicalHistoryDTOList);
+                    personMedicalHistoryListDTO.setStation(firestation.getStation());
+                }
+            }
+        }
+        return personMedicalHistoryListDTO;
     }
 
 }
