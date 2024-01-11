@@ -66,4 +66,15 @@ public class URLController {
         return personMedicalHistoryListDTO;
     }
 
+    @GetMapping("/communityEmail")
+    public List<String> getAllEmailsFromCity(@RequestParam String city) {
+        List<String> emailList = urlService.getAllEmailsFromCity(city);
+        if(!emailList.isEmpty()){
+            logger.info("Email list fetched successfully.");
+        } else {
+            logger.info("There was an error when fetching the email list.");
+        }
+        return emailList;
+    }
+
 }

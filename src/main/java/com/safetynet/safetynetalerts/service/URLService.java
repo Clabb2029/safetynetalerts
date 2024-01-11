@@ -163,4 +163,8 @@ public class URLService {
         return personMedicalHistoryListDTO;
     }
 
+    public List<String> getAllEmailsFromCity(String city) {
+        return personRepository.findAllEmailByCity(city);
+    }
+
 }

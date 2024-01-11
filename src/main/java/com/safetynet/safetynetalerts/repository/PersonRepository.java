@@ -88,6 +88,16 @@ public class PersonRepository {
         return personsList;
     }
 
+    public List<String> findAllEmailByCity(String city) {
+        List<String> emailList = new ArrayList<>();
+        dataModel.getPersons().forEach(person -> {
+            if(person.getCity().equals(city)) {
+                emailList.add(person.getEmail());
+            }
+        });
+        return emailList;
+    }
+
 }
 
 
