@@ -1,6 +1,7 @@
 package com.safetynet.safetynetalerts.controller;
 
 
+import com.safetynet.safetynetalerts.DTO.FloodDTO;
 import com.safetynet.safetynetalerts.DTO.PersonCountDTO;
 import com.safetynet.safetynetalerts.DTO.HomeMemberDTO;
 import com.safetynet.safetynetalerts.DTO.PersonMedicalHistoryListDTO;
@@ -64,6 +65,18 @@ public class URLController {
             logger.info("There was an error when fetching the residents information and medical history");
         }
         return personMedicalHistoryListDTO;
+    }
+
+    @GetMapping("/flood/stations")
+    public List<FloodDTO> getHomeListFromFirestationNumbers(@RequestParam List<String> stations) {
+        System.out.println(stations);
+        List<FloodDTO> floodDTOList = urlService.getHomeListFromFirestationNumbers(stations);
+        if(!floodDTOList.isEmpty()) {
+            logger.info("Home List fetched successfully.");
+        } else {
+            logger.info("There was an error when fetching the home list.");
+        }
+        return floodDTOList;
     }
 
     @GetMapping("/communityEmail")

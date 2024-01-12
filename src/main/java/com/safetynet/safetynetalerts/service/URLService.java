@@ -36,6 +36,10 @@ public class URLService {
         return LocalDate.parse(dateToConvert, formatter);
     }
 
+    public int getAge(String birthdate) {
+        return Period.between(convertStringDate(birthdate), today).getYears();
+    }
+
     public PersonCountDTO getPersonsAndCountFromStationNumber(String stationNumber) {
         int adultsCount = 0;
         int childrenCount = 0;
@@ -52,7 +56,7 @@ public class URLService {
 
                 if (!medicalRecordsList.isEmpty()) {
                     for (MedicalRecord medicalRecord : medicalRecordsList) {
-                        if(Period.between(convertStringDate(medicalRecord.getBirthdate()), today).getYears() <= 18) {
+                        if(getAge(medicalRecord.getBirthdate()) <= 18) {
                             childrenCount++;
                         } else {
                             adultsCount++;
@@ -84,11 +88,11 @@ public class URLService {
 
             if (!medicalRecordList.isEmpty()) {
                 for (MedicalRecord medicalRecord : medicalRecordList) {
-                    if(Period.between(convertStringDate(medicalRecord.getBirthdate()), today).getYears() <= 18) {
+                    if(getAge(medicalRecord.getBirthdate()) <= 18) {
                         for (Person person : personList) {
                             if(person.getLastName().equals(medicalRecord.getLastName()) && person.getFirstName().equals(medicalRecord.getFirstName())) {
                                 HomeChildDTO homeChildDTO = new HomeChildDTO();
-                                int age = Period.between(convertStringDate(medicalRecord.getBirthdate()), today).getYears();
+                                int age = getAge(medicalRecord.getBirthdate());
                                 homeChildDTO.setFirstName(person.getFirstName());
                                 homeChildDTO.setLastName(person.getLastName());
                                 homeChildDTO.setAge(age);
@@ -99,7 +103,7 @@ public class URLService {
                         for (Person person : personList) {
                             if(person.getLastName().equals(medicalRecord.getLastName()) && person.getFirstName().equals(medicalRecord.getFirstName())) {
                                 HomeOtherMemberDTO homeOtherMemberDTO = new HomeOtherMemberDTO();
-                                int age = Period.between(convertStringDate(medicalRecord.getBirthdate()), today).getYears();
+                                int age = getAge(medicalRecord.getBirthdate());
                                 homeOtherMemberDTO.setFirstName(person.getFirstName());
                                 homeOtherMemberDTO.setLastName(person.getLastName());
                                 homeOtherMemberDTO.setAge(age);
@@ -145,7 +149,7 @@ public class URLService {
                     for (Person person : personList) {
                         if(person.getLastName().equals(medicalRecord.getLastName()) && person.getFirstName().equals(medicalRecord.getFirstName())) {
                             PersonMedicalHistoryDTO personMedicalHistoryDTO = new PersonMedicalHistoryDTO();
-                            int age = Period.between(convertStringDate(medicalRecord.getBirthdate()), today).getYears();
+                            int age = getAge(medicalRecord.getBirthdate());
                             personMedicalHistoryDTO.setFirstName(person.getFirstName());
                             personMedicalHistoryDTO.setLastName(person.getLastName());
                             personMedicalHistoryDTO.setPhone(person.getPhone());
@@ -165,6 +169,52 @@ public class URLService {
 
     public List<String> getAllEmailsFromCity(String city) {
         return personRepository.findAllEmailByCity(city);
+    }
+
+    public List<FloodDTO> getHomeListFromFirestationNumbers(List<String> stations) {
+        List<FloodDTO> floodDTOList = new ArrayList<>();
+        List<String> addressList = firestationRepository.findAllByStationNumbers(stations);
+
+        if(!addressList.isEmpty()) {
+            List<PersonDTO> personDTOList = personRepository.findAllByAddressList(addressList);
+
+            if(!personDTOList.isEmpty()) {
+                List<MedicalRecord> medicalRecordList = medicalRecordRepository.findAllByName(personDTOList);
+
+                if(!medicalRecordList.isEmpty()) {
+                    for (String station : stations) {
+                        FloodDTO floodDTO = new FloodDTO();
+                        List<HomeDTO> homeDTOList = new ArrayList<>();
+                        floodDTO.setStation(station);
+                        for (String address : addressList) {
+                            HomeDTO homeDTO = new HomeDTO();
+                            List<PersonMedicalHistoryDTO> personMedicalHistoryDTOList = new ArrayList<>();
+                            homeDTO.setAddress(address);
+                            for(PersonDTO personDTO : personDTOList) {
+                                PersonMedicalHistoryDTO personMedicalHistoryDTO = new PersonMedicalHistoryDTO();
+                                for(MedicalRecord medicalRecord : medicalRecordList) {
+                                    if(personDTO.getFirstName().equals(medicalRecord.getFirstName()) && personDTO.getLastName().equals(medicalRecord.getLastName())) {
+                                        int age = getAge(medicalRecord.getBirthdate());
+                                        personMedicalHistoryDTO.setFirstName(personDTO.getFirstName());
+                                        personMedicalHistoryDTO.setLastName(personDTO.getLastName());
+                                        personMedicalHistoryDTO.setPhone(personDTO.getPhone());
+                                        personMedicalHistoryDTO.setAge(age);
+                                        personMedicalHistoryDTO.setMedications(medicalRecord.getMedications());
+                                        personMedicalHistoryDTO.setAllergies(medicalRecord.getAllergies());
+                                        personMedicalHistoryDTOList.add(personMedicalHistoryDTO);
+                                    }
+                                }
+                                homeDTO.setPersonMedicalHistoryDTOList(personMedicalHistoryDTOList);
+                            }
+                            homeDTOList.add(homeDTO);
+                        }
+                        floodDTO.setHomeDTOList(homeDTOList);
+                        floodDTOList.add(floodDTO);
+                    }
+                }
+            }
+        }
+        return floodDTOList;
     }
 
 }
