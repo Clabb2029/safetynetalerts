@@ -3,9 +3,9 @@ package com.safetynet.safetynetalerts.DTO;
 import lombok.Data;
 
 @Data
-public class HomeOtherMemberDTO {
-
+public class FirestationPersonDTO {
     private String firstName;
     private String lastName;
-    private int age;
+    private String address;
+    private String phone;
 }

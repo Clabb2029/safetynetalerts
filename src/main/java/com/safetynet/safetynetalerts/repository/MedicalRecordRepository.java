@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.safetynet.safetynetalerts.DTO.PersonDTO;
+import com.safetynet.safetynetalerts.DTO.FirestationPersonDTO;
 import com.safetynet.safetynetalerts.model.DataModel;
 import com.safetynet.safetynetalerts.model.MedicalRecord;
 import com.safetynet.safetynetalerts.model.Person;
@@ -56,28 +56,31 @@ public class MedicalRecordRepository {
         }
     }
 
-    public List<MedicalRecord> findAllByName(List<PersonDTO> personsDTOList) {
-        List<MedicalRecord> medicalRecordsList = new ArrayList<>();
-        dataModel.getMedicalRecords().forEach(medicalRecord -> {
-            personsDTOList.forEach(person -> {
-                if (medicalRecord.getFirstName().equals(person.getFirstName()) && medicalRecord.getLastName().equals(person.getLastName())) {
-                    medicalRecordsList.add(medicalRecord);
-                }
-            });
-        });
-        return medicalRecordsList;
-    }
-
-    public List<MedicalRecord> findAllByNames(List<Person> personList) {
+    public List<MedicalRecord> findAllByName(List<FirestationPersonDTO> firestationPersonDTOList) {
         List<MedicalRecord> medicalRecordList = new ArrayList<>();
         dataModel.getMedicalRecords().forEach(medicalRecord -> {
-            personList.forEach(person -> {
+            firestationPersonDTOList.forEach(person -> {
                 if (medicalRecord.getFirstName().equals(person.getFirstName()) && medicalRecord.getLastName().equals(person.getLastName())) {
                     medicalRecordList.add(medicalRecord);
                 }
             });
         });
         return medicalRecordList;
+    }
+
+    public List<MedicalRecord> findAllByNames(List<Person> personList) {
+        List<MedicalRecord> medicalRecordListCopy = (List<MedicalRecord>)((ArrayList<MedicalRecord>)dataModel.getMedicalRecords()).clone();
+        List<MedicalRecord> returnedMedicalRecordList = new ArrayList<>();
+        for(int i = 0 ; i < personList.size() ; i++) {
+            int finalI = i;
+            MedicalRecord filteredMedicalRecord = medicalRecordListCopy.stream().filter(medicalRecord -> (
+                    medicalRecord.getFirstName().equals(personList.get(finalI).getFirstName())
+                    && medicalRecord.getLastName().equals(personList.get(finalI).getLastName())
+                    )).findAny().orElse(null);
+            returnedMedicalRecordList.add(filteredMedicalRecord);
+            medicalRecordListCopy.remove(filteredMedicalRecord);
+        }
+        return returnedMedicalRecordList;
     }
 
 }

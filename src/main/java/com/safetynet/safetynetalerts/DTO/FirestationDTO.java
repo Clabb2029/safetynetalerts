@@ -5,10 +5,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PersonCountDTO {
-
-    private List<PersonDTO> personDTOList;
+public class FirestationDTO {
+    private List<FirestationPersonDTO> firestationPersonDTOList;
     private int adultCount;
     private int childrenCount;
-
 }

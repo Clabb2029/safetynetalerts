@@ -18,13 +18,13 @@ public class PersonController {
 
     @GetMapping("/persons")
     public List<Person> getAllPerson(){
-        List<Person> returnedPersonsArray = personService.getAllPersons();
-        if(!returnedPersonsArray.isEmpty()) {
-            logger.info("Persons list fetched successfully.");
+        List<Person> returnedPersonList = personService.getAllPersons();
+        if(!returnedPersonList.isEmpty()) {
+            logger.info("Person list fetched successfully.");
         } else {
-            logger.error("There was an error when fetching the persons list.");
+            logger.error("There was an error when fetching the person list.");
         }
-        return returnedPersonsArray;
+        return returnedPersonList;
     }
 
     @PostMapping("/persons")

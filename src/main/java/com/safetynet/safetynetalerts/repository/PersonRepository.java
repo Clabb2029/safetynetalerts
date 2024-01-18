@@ -1,6 +1,6 @@
 package com.safetynet.safetynetalerts.repository;
 
-import com.safetynet.safetynetalerts.DTO.PersonDTO;
+import com.safetynet.safetynetalerts.DTO.FirestationPersonDTO;
 import com.safetynet.safetynetalerts.model.DataModel;
 import com.safetynet.safetynetalerts.model.Person;
 import org.springframework.stereotype.Repository;
@@ -59,36 +59,34 @@ public class PersonRepository {
         }
     }
 
-    public List<PersonDTO> findAllByAddressList(List<String> addressList) {
-        List<PersonDTO> personsDTOList = new ArrayList<>();
+    public List<FirestationPersonDTO> findAllByAddressList(List<String> addressList) {
+        List<FirestationPersonDTO> firestationPersonDTOList = new ArrayList<>();
         dataModel.getPersons().forEach(person -> {
             addressList.forEach(address -> {
                 if (person.getAddress().equals(address)){
-                    PersonDTO personDTO = new PersonDTO();
-                    personDTO.setFirstName(person.getFirstName());
-                    personDTO.setLastName(person.getLastName());
-                    personDTO.setAddress(person.getAddress());
-                    personDTO.setCity(person.getCity());
-                    personDTO.setZip(person.getZip());
-                    personDTO.setPhone(person.getPhone());
-                    personsDTOList.add(personDTO);
+                    FirestationPersonDTO firestationPersonDTO = new FirestationPersonDTO();
+                    firestationPersonDTO.setFirstName(person.getFirstName());
+                    firestationPersonDTO.setLastName(person.getLastName());
+                    firestationPersonDTO.setAddress(person.getAddress());
+                    firestationPersonDTO.setPhone(person.getPhone());
+                    firestationPersonDTOList.add(firestationPersonDTO);
                 }
             });
         });
-        return personsDTOList;
+        return firestationPersonDTOList;
     }
 
     public List<Person> findAllByAddress(String address) {
-        List<Person> personsList = new ArrayList<>();
+        List<Person> personList = new ArrayList<>();
         dataModel.getPersons().forEach(person -> {
             if(person.getAddress().equals(address)) {
-                personsList.add(person);
+                personList.add(person);
             }
         });
-        return personsList;
+        return personList;
     }
 
-    public List<String> findAllEmailByCity(String city) {
+    public List<String> findAllEmailsByCity(String city) {
         List<String> emailList = new ArrayList<>();
         dataModel.getPersons().forEach(person -> {
             if(person.getCity().equals(city)) {
@@ -96,6 +94,16 @@ public class PersonRepository {
             }
         });
         return emailList;
+    }
+
+    public List<Person> findAllByFullName(String firstName, String lastName) {
+        List<Person> personList = new ArrayList<>();
+        dataModel.getPersons().forEach(person -> {
+            if(person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
+                personList.add(person);
+            }
+        });
+        return personList;
     }
 
 }

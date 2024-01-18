@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class FloodDTO {
-
     private String station;
-    List<HomeDTO> homeDTOList;
+    List<FloodAddressDTO> floodAddressDTOList;
 }

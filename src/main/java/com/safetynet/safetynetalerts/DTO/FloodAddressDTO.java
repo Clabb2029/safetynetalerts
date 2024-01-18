@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class HomeDTO {
-
+public class FloodAddressDTO {
     private String address;
-    List<PersonMedicalHistoryDTO> personMedicalHistoryDTOList;
+    List<FirePersonDTO> personMedicalHistoryDTOList;
 }

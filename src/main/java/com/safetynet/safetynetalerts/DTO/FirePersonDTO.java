@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PersonMedicalHistoryDTO {
-
+public class FirePersonDTO {
     private String firstName;
     private String lastName;
     private String phone;

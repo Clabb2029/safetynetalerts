@@ -18,13 +18,13 @@ public class FirestationController {
 
     @GetMapping("/firestations")
     public List<Firestation> getFirestations(){
-        List<Firestation> returnedFirestationsArray = firestationService.getAllFirestations();
-        if(!returnedFirestationsArray.isEmpty()) {
-            logger.info("Firestations list fetched successfully.");
+        List<Firestation> returnedFirestationList = firestationService.getAllFirestations();
+        if(!returnedFirestationList.isEmpty()) {
+            logger.info("Firestation list fetched successfully.");
         } else {
-            logger.error("There was an error when fetching the firestations list.");
+            logger.error("There was an error when fetching the firestation list.");
         }
-        return returnedFirestationsArray;
+        return returnedFirestationList;
     }
 
     @PostMapping("/firestations")

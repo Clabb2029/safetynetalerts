@@ -62,15 +62,4 @@ public class FirestationRepository {
         ).findAny().orElse(null);
     }
 
-    public List<String> findAllByStationNumbers(List<String> stations){
-        List<String> addressList = new ArrayList<>();
-        dataModel.getFirestations().forEach(firestation -> {
-            stations.forEach(station -> {
-                if(firestation.getStation().equals(station)) {
-                    addressList.add(firestation.getAddress());
-                }
-            });
-        });
-        return addressList;
-    }
 }

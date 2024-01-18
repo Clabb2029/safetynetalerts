@@ -18,13 +18,13 @@ public class MedicalRecordController {
 
     @GetMapping("/medicalRecords")
     public List<MedicalRecord> getAllMedicalRecords() {
-        List<MedicalRecord> returnedMedicalRecordsArray = medicalRecordService.getAllMedicalRecords();
-        if(!returnedMedicalRecordsArray.isEmpty()) {
-            logger.info("Medical records list fetched successfully.");
+        List<MedicalRecord> returnedMedicalRecordList = medicalRecordService.getAllMedicalRecords();
+        if(!returnedMedicalRecordList.isEmpty()) {
+            logger.info("Medical record list fetched successfully.");
         } else {
-            logger.error("There was an error when fetching the medical records list.");
+            logger.error("There was an error when fetching the medical record list.");
         }
-        return returnedMedicalRecordsArray;
+        return returnedMedicalRecordList;
     }
 
     @PostMapping("/medicalRecords")
