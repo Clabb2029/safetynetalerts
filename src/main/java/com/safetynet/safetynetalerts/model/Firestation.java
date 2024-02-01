@@ -7,7 +7,10 @@ public class Firestation {
     private String address;
     private String station;
 
-    public Firestation(){
-        super();
+    public Firestation(){}
+
+    public Firestation(String address, String station) {
+        this.address = address;
+        this.station = station;
     }
 }

@@ -34,22 +34,12 @@ public class MedicalRecordControllerTests {
 
     static List<MedicalRecord> medicalRecordList = new ArrayList<>();
 
+    ObjectMapper mapper = new ObjectMapper();
+
     @BeforeAll
     private static void setUp() {
-        MedicalRecord medicalRecord1 = new MedicalRecord();
-        medicalRecord1.setFirstName("John");
-        medicalRecord1.setLastName("Boyd");
-        medicalRecord1.setBirthdate("03/06/1984");
-        medicalRecord1.setMedications(List.of(new String[]{"aznol:350mg", "hydrapermazol:100mg"}));
-        medicalRecord1.setAllergies(List.of(new String[]{"nillacilan"}));
-
-        MedicalRecord medicalRecord2 = new MedicalRecord();
-        medicalRecord2.setFirstName("Jacob");
-        medicalRecord2.setLastName("Boyd");
-        medicalRecord2.setBirthdate("03/06/1989");
-        medicalRecord2.setMedications(List.of(new String[]{"pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"}));
-        medicalRecord2.setAllergies(List.of(new String[]{}));
-
+        MedicalRecord medicalRecord1 = new MedicalRecord("John", "Boyd", "03/06/1984", List.of(new String[]{"aznol:350mg", "hydrapermazol:100mg"}), List.of(new String[]{"nillacilan"}));
+        MedicalRecord medicalRecord2 = new MedicalRecord("Jacob", "Boyd", "03/06/1989", List.of(new String[]{"pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"}), List.of(new String[]{}));
         medicalRecordList.add(medicalRecord1);
         medicalRecordList.add(medicalRecord2);
     }
@@ -65,18 +55,16 @@ public class MedicalRecordControllerTests {
 
     @Test
     public void testGetFirestationsWhenEmptyList() throws Exception {
-        List<MedicalRecord> medicalRecordListCopy = (List<MedicalRecord>)((ArrayList<MedicalRecord>)medicalRecordList).clone();
-        medicalRecordListCopy.clear();
-        when(medicalRecordService.getAllMedicalRecords()).thenReturn(medicalRecordListCopy);
+        List<MedicalRecord> emptyMedicalRecordList = new ArrayList<>();
+        when(medicalRecordService.getAllMedicalRecords()).thenReturn(emptyMedicalRecordList);
         mockMvc.perform(get("/medicalRecords")).andExpect(status().isNotFound());
     }
 
 
-    // Create MedicalnRecord
+    // Create MedicalRecord
 
     @Test
     public void testWhenCreateMedicalRecordWentGood_ShouldReturnMedicalRecord() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("Johanna");
         medicalRecord.setLastName("Bold");
@@ -93,7 +81,6 @@ public class MedicalRecordControllerTests {
 
     @Test
     public void testWhenCreateMedicalRecordWentBad_ShouldReturnMedicalRecord() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("Johanna");
         medicalRecord.setLastName("Bold");
@@ -105,7 +92,7 @@ public class MedicalRecordControllerTests {
         mockMvc.perform(post("/medicalRecords")
                 .contentType("application/json")
                 .content(json))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
 
@@ -113,7 +100,6 @@ public class MedicalRecordControllerTests {
 
     @Test
     public void testUpdateWhenMedicalRecordFound_ShouldReturnMedicalRecord() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("John");
         medicalRecord.setLastName("Boyd");
@@ -130,7 +116,6 @@ public class MedicalRecordControllerTests {
 
     @Test
     public void testUpdateWhenMedicalRecordFound_ShouldReturnNull() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("John");
         medicalRecord.setLastName("Boyd");
@@ -142,7 +127,7 @@ public class MedicalRecordControllerTests {
         mockMvc.perform(put("/medicalRecords/Boyd/John")
                 .contentType("application/json")
                 .content(json))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isInternalServerError());
     }
 
 

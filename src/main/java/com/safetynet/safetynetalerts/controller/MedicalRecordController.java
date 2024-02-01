@@ -39,7 +39,7 @@ public class MedicalRecordController {
             return ResponseEntity.ok(returnedMedicalRecord);
         } else {
             logger.error("There was an error when creating the medical record.");
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -51,7 +51,7 @@ public class MedicalRecordController {
             return ResponseEntity.ok(returnedMedicalRecord);
         } else {
             logger.error("There was an error when updating the medical record.");
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 

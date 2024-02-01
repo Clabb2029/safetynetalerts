@@ -8,4 +8,11 @@ import java.util.List;
 public class FloodDTO {
     private String station;
     List<FloodAddressDTO> floodAddressDTOList;
+
+    public FloodDTO() {}
+
+    public FloodDTO(String station, List<FloodAddressDTO> floodAddressDTOList) {
+        this.station = station;
+        this.floodAddressDTOList = floodAddressDTOList;
+    }
 }

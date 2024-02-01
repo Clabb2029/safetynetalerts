@@ -34,26 +34,12 @@ public class PersonControllerTests {
 
     static List<Person> personList = new ArrayList<>();
 
+    ObjectMapper mapper = new ObjectMapper();
+
     @BeforeAll
     private static void setUp() {
-        Person person1 = new Person();
-        person1.setFirstName("John");
-        person1.setLastName("Boyd");
-        person1.setAddress("1509 Culver St");
-        person1.setCity("Culver");
-        person1.setZip("97451");
-        person1.setPhone("841-874-6512");
-        person1.setEmail("jaboyd@email.com");
-
-        Person person2 = new Person();
-        person2.setFirstName("Jacob");
-        person2.setLastName("Boyd");
-        person2.setAddress("1509 Culver St");
-        person2.setCity("Culver");
-        person2.setZip("97451");
-        person2.setPhone("841-874-6513");
-        person2.setEmail("drk@email.com");
-
+        Person person1 = new Person("John", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6512", "jaboyd@email.com");
+        Person person2 = new Person("Jacob", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6513", "drk@email.com");
         personList.add(person1);
         personList.add(person2);
     }
@@ -69,9 +55,8 @@ public class PersonControllerTests {
 
     @Test
     public void testGetPersonsWhenEmptyList() throws Exception {
-        List<Person> personListCopy = (List<Person>)((ArrayList<Person>)personList).clone();
-        personListCopy.clear();
-        when(personService.getAllPersons()).thenReturn(personListCopy);
+        List<Person> emptyPersonList = new ArrayList<>();
+        when(personService.getAllPersons()).thenReturn(emptyPersonList);
         mockMvc.perform(get("/persons")).andExpect(status().isNotFound());
     }
 
@@ -80,7 +65,6 @@ public class PersonControllerTests {
 
     @Test
     public void testWhenCreatePersonWentGood_ShouldReturnPerson() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         Person person = new Person();
         person.setFirstName("Tenley");
         person.setLastName("Boyd");
@@ -92,14 +76,13 @@ public class PersonControllerTests {
         String json = mapper.writeValueAsString(person);
         when(personService.createPerson(any(Person.class))).thenReturn(person);
         mockMvc.perform(post("/persons")
-                        .contentType("application/json")
-                        .content(json))
+                .contentType("application/json")
+                .content(json))
                 .andExpect(status().is(200));
     }
 
     @Test
     public void testWhenCreatePersonWentBad_ShouldReturnNull() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         Person person = new Person();
         person.setFirstName("Tenley");
         person.setLastName("Boyd");
@@ -111,9 +94,9 @@ public class PersonControllerTests {
         String json = mapper.writeValueAsString(person);
         when(personService.createPerson(any(Person.class))).thenReturn(null);
         mockMvc.perform(post("/persons")
-                        .contentType("application/json")
-                        .content(json))
-                .andExpect(status().isBadRequest());
+                .contentType("application/json")
+                .content(json))
+                .andExpect(status().isInternalServerError());
     }
 
 
@@ -121,7 +104,6 @@ public class PersonControllerTests {
 
     @Test
     public void testUpdateWhenPersonFound_ShouldReturnPerson() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         Person person = new Person();
         person.setFirstName("Tenley");
         person.setLastName("Boyd");
@@ -133,14 +115,13 @@ public class PersonControllerTests {
         String json = mapper.writeValueAsString(person);
         when(personService.updatePerson(any(), any(), any(Person.class))).thenReturn(person);
         mockMvc.perform(put("/persons/Boyd/Tenley")
-                        .contentType("application/json")
-                        .content(json))
+                .contentType("application/json")
+                .content(json))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testUpdateWhenPersonNotFound_ShouldReturnNull() throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
         Person person = new Person();
         person.setFirstName("Tenley");
         person.setLastName("Boyd");
@@ -152,9 +133,9 @@ public class PersonControllerTests {
         String json = mapper.writeValueAsString(person);
         when(personService.updatePerson(any(), any(), any(Person.class))).thenReturn(null);
         mockMvc.perform(put("/persons/Boyd/Tenley")
-                        .contentType("application/json")
-                        .content(json))
-                .andExpect(status().isNotFound());
+                .contentType("application/json")
+                .content(json))
+                .andExpect(status().isInternalServerError());
     }
 
 

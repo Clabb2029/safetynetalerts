@@ -37,12 +37,8 @@ public class FirestationControllerTests {
 
     @BeforeAll
     private static void setUp() {
-        Firestation firestation1 = new Firestation();
-        firestation1.setAddress("1509 Culver St");
-        firestation1.setStation("3");
-        Firestation firestation2 = new Firestation();
-        firestation1.setAddress("29 15th St");
-        firestation1.setStation("2");
+        Firestation firestation1 = new Firestation("1509 Culver St", "3");
+        Firestation firestation2 = new Firestation("29 15th St", "2");
         firestationList.add(firestation1);
         firestationList.add(firestation2);
     }
@@ -58,9 +54,8 @@ public class FirestationControllerTests {
 
     @Test
     public void testGetFirestationsWhenEmptyList() throws Exception {
-        List<Firestation> firestationListCopy = (List<Firestation>)((ArrayList<Firestation>)firestationList).clone();
-        firestationListCopy.clear();
-        when(firestationService.getAllFirestations()).thenReturn(firestationListCopy);
+        List<Firestation> emptyFirestationList = new ArrayList<>();
+        when(firestationService.getAllFirestations()).thenReturn(emptyFirestationList);
         mockMvc.perform(get("/firestations")).andExpect(status().isNotFound());
     }
 

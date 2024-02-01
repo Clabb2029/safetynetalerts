@@ -37,7 +37,7 @@ public class PersonController {
             return ResponseEntity.ok(returnedPerson);
         } else {
             logger.error("There was an error when creating the person.");
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -49,7 +49,7 @@ public class PersonController {
             return ResponseEntity.ok(returnedPerson);
         } else {
             logger.error("There was an error when updating the person.");
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.internalServerError().build();
         }
     }
 
