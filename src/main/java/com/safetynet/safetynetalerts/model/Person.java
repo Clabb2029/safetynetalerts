@@ -1,6 +1,8 @@
 package com.safetynet.safetynetalerts.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
 
 @Data
 public class Person {
@@ -11,4 +13,8 @@ public class Person {
     private String zip;
     private String phone;
     private String email;
+
+    public Person() {
+        super();
+    }
 }

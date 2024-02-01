@@ -1,11 +1,12 @@
 package com.safetynet.safetynetalerts.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.safetynet.safetynetalerts.model.DataModel;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.*;
-import java.util.Arrays;
 
 @Configuration
 public class DataMapper {
@@ -13,16 +14,24 @@ public class DataMapper {
     public void read() {
         try {
             readFile();
+        } catch (StreamReadException e) {
+            System.out.println(" StreamRead Exception ! ");
+            e.printStackTrace();
+        } catch (DatabindException e) {
+            System.out.println(" Databind Exception ! ");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println(" IO Exception ! ");
+            e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Unable to read the JSON file " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Unable to read the JSON file ");
+            e.getStackTrace();
         }
     }
 
     public void readFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream filePath = new FileInputStream("src/main/resources/data/data.json");
-        DataModel data = new DataModel();
-        data = mapper.readValue(filePath, DataModel.class);
+        mapper.readValue(new File("src/main/resources/data/data.json"), DataModel.class);
     }
 
 }

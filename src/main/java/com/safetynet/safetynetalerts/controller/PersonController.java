@@ -5,6 +5,7 @@ import com.safetynet.safetynetalerts.service.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,47 +18,51 @@ public class PersonController {
     private static final Logger logger = LogManager.getLogger(MedicalRecordController.class);
 
     @GetMapping("/persons")
-    public List<Person> getAllPerson(){
+    public ResponseEntity<List<Person>> getAllPerson(){
         List<Person> returnedPersonList = personService.getAllPersons();
         if(!returnedPersonList.isEmpty()) {
             logger.info("Person list fetched successfully.");
+            return ResponseEntity.ok(returnedPersonList);
         } else {
             logger.error("There was an error when fetching the person list.");
+            return ResponseEntity.notFound().build();
         }
-        return returnedPersonList;
     }
 
     @PostMapping("/persons")
-    public Person createPerson(@RequestBody Person person) {
+    public ResponseEntity<Person> createPerson(@RequestBody Person person) {
         Person returnedPerson = personService.createPerson(person);
         if(returnedPerson != null) {
             logger.info("Person created successfully.");
+            return ResponseEntity.ok(returnedPerson);
         } else {
             logger.error("There was an error when creating the person.");
+            return ResponseEntity.badRequest().build();
         }
-        return returnedPerson;
     }
 
     @PutMapping("/persons/{lastName}/{firstName}")
-    public Person updatePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody Person person) {
+    public ResponseEntity<Person> updatePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody Person person) {
         Person returnedPerson = personService.updatePerson(lastName, firstName, person);
         if (returnedPerson != null) {
             logger.info("Person updated successfully.");
+            return ResponseEntity.ok(returnedPerson);
         } else {
             logger.error("There was an error when updating the person.");
+            return ResponseEntity.notFound().build();
         }
-        return returnedPerson;
     }
 
     @DeleteMapping("/persons/{lastName}/{firstName}")
-    public boolean deletePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
+    public ResponseEntity<Boolean> deletePerson(@PathVariable("lastName") String lastName, @PathVariable("firstName") String firstName){
         boolean isPersonDeleted = personService.deletePerson(lastName, firstName);
         if (isPersonDeleted) {
             logger.info("Person deleted successfully.");
+            return ResponseEntity.ok(isPersonDeleted);
         } else {
             logger.error("There was an error when deleting the person.");
+            return ResponseEntity.notFound().build();
         }
-        return isPersonDeleted;
     }
 
 }
