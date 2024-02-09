@@ -78,11 +78,8 @@ public class URLService {
                 for (MedicalRecord medicalRecord : medicalRecordList) {
                     for(Person person : personList) {
                         if(person.getLastName().equals(medicalRecord.getLastName()) && person.getFirstName().equals(medicalRecord.getFirstName())) {
-                            ChildAlertHomeMemberDTO childAlertHomeMemberDTO = new ChildAlertHomeMemberDTO();
                             int age = getAge(medicalRecord.getBirthdate());
-                            childAlertHomeMemberDTO.setFirstName(person.getFirstName());
-                            childAlertHomeMemberDTO.setLastName(person.getLastName());
-                            childAlertHomeMemberDTO.setAge(age);
+                            ChildAlertHomeMemberDTO childAlertHomeMemberDTO = new ChildAlertHomeMemberDTO(person.getFirstName(), person.getLastName(), age);
                             if (age <= 18) {
                                 childrenList.add(childAlertHomeMemberDTO);
                             } else {
@@ -127,14 +124,8 @@ public class URLService {
                 for(MedicalRecord medicalRecord : medicalRecordList) {
                     for (Person person : personList) {
                         if(person.getLastName().equals(medicalRecord.getLastName()) && person.getFirstName().equals(medicalRecord.getFirstName())) {
-                            FirePersonDTO personMedicalHistoryDTO = new FirePersonDTO();
                             int age = getAge(medicalRecord.getBirthdate());
-                            personMedicalHistoryDTO.setFirstName(person.getFirstName());
-                            personMedicalHistoryDTO.setLastName(person.getLastName());
-                            personMedicalHistoryDTO.setPhone(person.getPhone());
-                            personMedicalHistoryDTO.setAge(age);
-                            personMedicalHistoryDTO.setMedications(medicalRecord.getMedications());
-                            personMedicalHistoryDTO.setAllergies(medicalRecord.getAllergies());
+                            FirePersonDTO personMedicalHistoryDTO = new FirePersonDTO(person.getFirstName(), person.getLastName(), person.getPhone(), age, medicalRecord.getMedications(), medicalRecord.getAllergies());
                             personMedicalHistoryDTOList.add(personMedicalHistoryDTO);
                         }
                     }
@@ -168,7 +159,6 @@ public class URLService {
 
                     if(!medicalRecordList.isEmpty()) {
                         for(int i = 0 ; i < personList.size() ; i++) {
-                            FirePersonDTO firePersonDTO = new FirePersonDTO();
                             int finalI = i;
                             MedicalRecord filteredMedicalRecord = medicalRecordList.stream().filter(medicalRecord -> (
                                     medicalRecord.getFirstName().equals(personList.get(finalI).getFirstName())
@@ -176,12 +166,7 @@ public class URLService {
                             )).findAny().orElse(null);
                             if(filteredMedicalRecord != null) {
                                 int age = getAge(filteredMedicalRecord.getBirthdate());
-                                firePersonDTO.setFirstName(personList.get(i).getFirstName());
-                                firePersonDTO.setLastName(personList.get(i).getLastName());
-                                firePersonDTO.setPhone(personList.get(i).getPhone());
-                                firePersonDTO.setAge(age);
-                                firePersonDTO.setMedications(filteredMedicalRecord.getMedications());
-                                firePersonDTO.setAllergies(filteredMedicalRecord.getAllergies());
+                                FirePersonDTO firePersonDTO = new FirePersonDTO(personList.get(i).getFirstName(), personList.get(i).getLastName(), personList.get(i).getPhone(), age, filteredMedicalRecord.getMedications(), filteredMedicalRecord.getAllergies());
                                 personMedicalHistoryDTOList.add(firePersonDTO);
                                 medicalRecordList.remove(filteredMedicalRecord);
                             }
@@ -204,14 +189,8 @@ public class URLService {
 
         if(!medicalRecordList.isEmpty()){
             for (int i = 0 ; i < personList.size() ; i++) {
-                PersonInfoDTO personInfoDTO = new PersonInfoDTO();
-                personInfoDTO.setFirstName(personList.get(i).getFirstName());
-                personInfoDTO.setLastName(personList.get(i).getLastName());
-                personInfoDTO.setAddress(personList.get(i).getAddress());
-                personInfoDTO.setAge(getAge(medicalRecordList.get(i).getBirthdate()));
-                personInfoDTO.setEmail(personList.get(i).getEmail());
-                personInfoDTO.setMedications(medicalRecordList.get(i).getMedications());
-                personInfoDTO.setAllergies(medicalRecordList.get(i).getAllergies());
+                int age = getAge(medicalRecordList.get(i).getBirthdate());
+                PersonInfoDTO personInfoDTO = new PersonInfoDTO(personList.get(i).getFirstName(), personList.get(i).getLastName(), personList.get(i).getAddress(), age, personList.get(i).getEmail(), medicalRecordList.get(i).getMedications(), medicalRecordList.get(i).getAllergies());
                 personInfoDTOList.add(personInfoDTO);
             }
         }

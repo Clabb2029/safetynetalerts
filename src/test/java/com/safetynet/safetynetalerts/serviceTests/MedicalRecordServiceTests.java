@@ -29,7 +29,7 @@ public class MedicalRecordServiceTests {
     private MedicalRecordRepository medicalRecordRepository;
 
     @Test
-    public void testGetAllFirestations_ShouldReturnAMedicalRecordList() {
+    public void testGetAllFirestations_ShouldReturnMedicalRecordList() {
         List<MedicalRecord> medicalRecordList = List.of(new MedicalRecord[] {
                 new MedicalRecord("John", "Boyd", "03/06/1984", List.of("aznol:350mg", "hydrapermazol:100mg"), List.of("nillacilan")),
                 new MedicalRecord("Jacob", "Boyd", "03/06/1989", List.of("pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"), List.of())

@@ -64,11 +64,7 @@ public class PersonRepository {
         dataModel.getPersons().forEach(person -> {
             addressList.forEach(address -> {
                 if (person.getAddress().equals(address)){
-                    FirestationPersonDTO firestationPersonDTO = new FirestationPersonDTO();
-                    firestationPersonDTO.setFirstName(person.getFirstName());
-                    firestationPersonDTO.setLastName(person.getLastName());
-                    firestationPersonDTO.setAddress(person.getAddress());
-                    firestationPersonDTO.setPhone(person.getPhone());
+                    FirestationPersonDTO firestationPersonDTO = new FirestationPersonDTO(person.getFirstName(), person.getLastName(), person.getAddress(), person.getPhone());
                     firestationPersonDTOList.add(firestationPersonDTO);
                 }
             });

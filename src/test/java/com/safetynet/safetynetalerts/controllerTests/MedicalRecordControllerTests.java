@@ -48,15 +48,14 @@ public class MedicalRecordControllerTests {
     // Get Medical Records
 
     @Test
-    public void testGetMedicalRecords() throws Exception {
+    public void testGetMedicalRecords_ShouldReturnMedicalRecordList() throws Exception {
         when(medicalRecordService.getAllMedicalRecords()).thenReturn(medicalRecordList);
         mockMvc.perform(get("/medicalRecords")).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetFirestationsWhenEmptyList() throws Exception {
-        List<MedicalRecord> emptyMedicalRecordList = new ArrayList<>();
-        when(medicalRecordService.getAllMedicalRecords()).thenReturn(emptyMedicalRecordList);
+    public void testGetFirestationsWhenEmptyList_ShouldReturnNotFound() throws Exception {
+        when(medicalRecordService.getAllMedicalRecords()).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/medicalRecords")).andExpect(status().isNotFound());
     }
 
@@ -80,7 +79,7 @@ public class MedicalRecordControllerTests {
     }
 
     @Test
-    public void testWhenCreateMedicalRecordWentBad_ShouldReturnMedicalRecord() throws Exception {
+    public void testWhenCreateMedicalRecordWentBad_ShouldReturnInternalServerError() throws Exception {
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("Johanna");
         medicalRecord.setLastName("Bold");
@@ -115,7 +114,7 @@ public class MedicalRecordControllerTests {
     }
 
     @Test
-    public void testUpdateWhenMedicalRecordFound_ShouldReturnNull() throws Exception {
+    public void testUpdateWhenMedicalRecordNotFound_ShouldReturnInternalServerError() throws Exception {
         MedicalRecord medicalRecord = new MedicalRecord();
         medicalRecord.setFirstName("John");
         medicalRecord.setLastName("Boyd");
@@ -134,14 +133,14 @@ public class MedicalRecordControllerTests {
     // Delete Medical Record
 
     @Test
-    public void testDeleteWhenMedicalRecordFound_ShouldReturnTrue() throws Exception {
+    public void testDeleteWhenMedicalRecordFound_ShouldReturnOk() throws Exception {
         when(medicalRecordService.deleteMedicalRecord(any(), any())).thenReturn(true);
         mockMvc.perform(delete("/medicalRecords/Boyd/John"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testDeleteWhenMedicalRecordNotFound_ShouldReturnFalse() throws Exception {
+    public void testDeleteWhenMedicalRecordNotFound_ShouldReturnNotFound() throws Exception {
         when(medicalRecordService.deleteMedicalRecord(any(), any())).thenReturn(false);
         mockMvc.perform(delete("/medicalRecords/Boyd/John"))
                 .andExpect(status().isNotFound());

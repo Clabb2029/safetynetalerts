@@ -47,15 +47,14 @@ public class FirestationControllerTests {
     //GetFirestations
 
     @Test
-    public void testGetFirestations() throws Exception {
+    public void testGetFirestations_ShouldReturnFirestationList() throws Exception {
         when(firestationService.getAllFirestations()).thenReturn(firestationList);
         mockMvc.perform(get("/firestations")).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetFirestationsWhenEmptyList() throws Exception {
-        List<Firestation> emptyFirestationList = new ArrayList<>();
-        when(firestationService.getAllFirestations()).thenReturn(emptyFirestationList);
+    public void testGetFirestationsWhenEmptyList_ShouldReturnNotFound() throws Exception {
+        when(firestationService.getAllFirestations()).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/firestations")).andExpect(status().isNotFound());
     }
 
@@ -132,7 +131,7 @@ public class FirestationControllerTests {
     }
 
     @Test
-    public void testDeleteFirestationWithoutBodyShouldFail() throws Exception {
+    public void testDeleteWhenFirestationNotFound_ShouldReturnNotFound() throws Exception {
         when(firestationService.deleteFirestation(any(), any())).thenReturn(false);
         mockMvc.perform(delete("/firestations/1509 Culver Street/5"))
                 .andExpect(status().isNotFound());

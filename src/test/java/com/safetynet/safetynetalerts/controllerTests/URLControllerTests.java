@@ -31,7 +31,7 @@ public class URLControllerTests {
     private static URLService urlService;
 
     @Test
-    public void testGetFirestation() throws Exception {
+    public void testGetFirestation_ShouldReturnFirestation() throws Exception {
         FirestationDTO firestationDTO = new FirestationDTO(
                 List.of(
                         new FirestationPersonDTO[]{
@@ -48,13 +48,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetFirestationWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetFirestationWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getPersonsAndCountFromStationNumber(any())).thenReturn(new FirestationDTO());
         mockMvc.perform(get("/firestation?station_number=1")).andExpect(status().isInternalServerError());
     }
 
     @Test
-    public void testGetChildAlert() throws Exception {
+    public void testGetChildAlert_ShouldReturnChildAlertDTO() throws Exception {
         ChildAlertDTO childAlertDTO = new ChildAlertDTO(
                 List.of(
                         new ChildAlertHomeMemberDTO("Zach", "Zemicks", 6)
@@ -69,26 +69,26 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetChildAlertWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetChildAlertWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getChildrenAndFamilyMembersFromAddress(any())).thenReturn(new ChildAlertDTO());
         mockMvc.perform(get("/phoneAlert?firestation_number=4")).andExpect(status().isInternalServerError());
     }
 
     @Test
-    public void testGetPhoneAlert() throws Exception {
+    public void testGetPhoneAlert_ShouldReturnPhoneList() throws Exception {
         List<String> phoneList = List.of(new String[]{"841-874-6874", "841-874-9845", "841-874-8888", "841-874-9888"});
         when(urlService.getPhoneListFromFirestationNumber(any())).thenReturn(phoneList);
         mockMvc.perform(get("/phoneAlert?firestation_number=4")).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetPhoneAlertWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetPhoneAlertWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getPhoneListFromFirestationNumber(any())).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/phoneAlert?firestation_number=4")).andExpect(status().isInternalServerError());
     }
 
     @Test
-    public void testGetFire() throws Exception {
+    public void testGetFire_ShouldReturnFireDTO() throws Exception {
         FireDTO fireDTO = new FireDTO(
                 List.of(
                         new FirePersonDTO("Sophia", "Zemicks", "841-874-7878", 35, List.of(new String[]{"aznol:60mg", "hydrapermazol:900mg", "pharmacol:5000mg", "terazine:500mg"}), List.of(new String[]{"peanut", "shellfish", "aznol"})),
@@ -101,13 +101,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetFireWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetFireWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getResidentsMedicalHistoryFromAddress(any())).thenReturn(new FireDTO());
         mockMvc.perform(get("/fire?address=892 Downing Ct")).andExpect(status().isInternalServerError());
     }
 
     @Test
-    public void testGetFlood() throws Exception {
+    public void testGetFlood_ShouldReturnFloodDTOList() throws Exception {
         List<FloodDTO> floodDTOList = List.of(
                 new FloodDTO[]{
                         new FloodDTO("4", List.of(new FloodAddressDTO[]{
@@ -127,13 +127,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetFloodWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetFloodWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getHomeListFromFirestationNumbers(any())).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/flood/stations?stations=4")).andExpect(status().isInternalServerError());
     }
 
     @Test
-    public void testGetPersonInfo() throws Exception {
+    public void testGetPersonInfo_ShouldReturnPersonInfoDTOList() throws Exception {
         List<PersonInfoDTO> personInfoDTOList = List.of(new PersonInfoDTO[]{
                 new PersonInfoDTO("John", "Boyd", "1509 Culver St", 39, "jaboyd@email.com", List.of(new String[]{"aznol:200mg", "hydrapermazol:100mg"}), List.of(new String[]{"nillacilan"}))
         });
@@ -142,20 +142,20 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetPersonInfoWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetPersonInfoWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getInformationAndMedicalHistoryFromFullName(any(), any())).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/personInfo?firstName=John&lastName=Boyd")).andExpect(status().isInternalServerError());
     }
 
     @Test
-    public void testGetCommunityEmail() throws Exception {
+    public void testGetCommunityEmail_ShouldReturnEmailList() throws Exception {
         List<String> emailList = List.of("jaboyd@email.com","drk@email.com","tenz@email.com","jaboyd@email.com","jaboyd@email.com","drk@email.com","tenz@email.com","jaboyd@email.com","jaboyd@email.com","tcoop@ymail.com","lily@email.com","soph@email.com","ward@email.com","zarc@email.com","reg@email.com","jpeter@email.com","jpeter@email.com","aly@imail.com","bstel@email.com","ssanw@email.com","bstel@email.com","clivfd@ymail.com","gramps@email.com");
         when(urlService.getAllEmailsFromCity(any())).thenReturn(emailList);
         mockMvc.perform(get("/communityEmail?city=Culver")).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetCommunityEmailWhenResponseIsEmpty_ShouldReturnError() throws Exception {
+    public void testGetCommunityEmailWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
         when(urlService.getAllEmailsFromCity(any())).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/communityEmail?city=Culver")).andExpect(status().isInternalServerError());
     }
