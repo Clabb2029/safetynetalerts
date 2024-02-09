@@ -3,7 +3,6 @@ package com.safetynet.safetynetalerts.service;
 import com.safetynet.safetynetalerts.DTO.*;
 import com.safetynet.safetynetalerts.model.*;
 import com.safetynet.safetynetalerts.repository.*;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -12,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Service
 public class URLService {
 
