@@ -18,7 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +43,7 @@ public class URLServiceTests {
     private FirestationRepository firestationRepository;
 
     static String dateToConvert = "03/06/1984";
+
     List<FirestationPersonDTO> firestationPersonDTOList1 = List.of(
             new FirestationPersonDTO[]{
                     new FirestationPersonDTO("Peter", "Duncan", "644 Gershwin Cir", "841-874-6512"),
@@ -71,6 +73,7 @@ public class URLServiceTests {
     );
 
     List<String> addressList1 = List.of("29 15th St", "892 Downing Ct", "951 LoneTree Rd");
+
     List<String> addressList2 = List.of("644 Gershwin Cir");
 
     List<Person> personList1 = List.of(new Person[]{
@@ -80,13 +83,16 @@ public class URLServiceTests {
     Firestation firestation1 = new Firestation("644 Gershwin Cir", "1");
 
 
-
+    // test convertStringDate
 
     @Test
     public void testConvertStringDate_ShouldReturnConvertedDate() {
         LocalDate convertedDate = urlService.convertStringDate(dateToConvert);
         assertThat(convertedDate).isNotNull();
     }
+
+
+    // test getAge
 
     @Test
     public void testGetAge_ShouldReturnAge() {
@@ -98,57 +104,59 @@ public class URLServiceTests {
         };
     }
 
+
+    // tests getPersonsAndCountFromStationNumber
+
     @Test
     public void testGetPersonsAndCountFromStationNumber_ShouldReturnFirestationDTO() {
         when(firestationRepository.findAllByStationNumber(any())).thenReturn(addressList1);
         when(personRepository.findAllByAddressList(any())).thenReturn(firestationPersonDTOList1);
         when(medicalRecordRepository.findAllByName(any())).thenReturn(medicalRecordList1);
 
-        FirestationDTO returnedfirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
+        FirestationDTO returnedFirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
         verify(firestationRepository, Mockito.times(1)).findAllByStationNumber(any());
         verify(personRepository, Mockito.times(1)).findAllByAddressList(any());
         verify(medicalRecordRepository, Mockito.times(1)).findAllByName(any());
-        assertThat(returnedfirestationDTO.getFirestationPersonDTOList()).isNotEmpty();
-        assertEquals(returnedfirestationDTO.getAdultCount(), 5);
-        assertEquals(returnedfirestationDTO.getChildrenCount(), 1);
+        assertThat(returnedFirestationDTO.getFirestationPersonDTOList()).isNotEmpty();
+        assertEquals(returnedFirestationDTO.getAdultCount(), 5);
+        assertEquals(returnedFirestationDTO.getChildrenCount(), 1);
     }
 
     @Test
-    public void testGetPersonsAndCountFromStationNumberWhenAddressListIsEmpty_ShouldReturnEmptyFirestationDTO() {
+    public void testGetPersonsAndCountFromStationNumberWhenAddressListIsEmpty_ShouldReturnNull() {
         when(firestationRepository.findAllByStationNumber(any())).thenReturn(new ArrayList<>());
 
-        FirestationDTO returnedfirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
-        assertThat(returnedfirestationDTO.getFirestationPersonDTOList()).isNull();
+        FirestationDTO returnedFirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
+        assertThat(returnedFirestationDTO).isNull();
         verify(personRepository, Mockito.times(0)).findAllByAddressList(any());
         verify(medicalRecordRepository, Mockito.times(0)).findAllByName(any());
     }
 
     @Test
-    public void testGetPersonsAndCountFromStationNumberWhenFirestationPersonDTOListIsEmpty_ShouldReturnEmptyFirestationDTO() {
+    public void testGetPersonsAndCountFromStationNumberWhenFirestationPersonDTOListIsEmpty_ShouldReturnNull() {
         when(firestationRepository.findAllByStationNumber(any())).thenReturn(addressList1);
         when(personRepository.findAllByAddressList(any())).thenReturn(new ArrayList<>());
 
-        FirestationDTO returnedfirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
+        FirestationDTO returnedFirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
         verify(personRepository, Mockito.times(1)).findAllByAddressList(any());
         verify(medicalRecordRepository, Mockito.times(0)).findAllByName(any());
-        assertThat(returnedfirestationDTO.getFirestationPersonDTOList()).isNull();
-        assertEquals(returnedfirestationDTO.getAdultCount(), 0);
-        assertEquals(returnedfirestationDTO.getChildrenCount(), 0);
-
+        assertThat(returnedFirestationDTO).isNull();
     }
 
     @Test
-    public void testGetPersonsAndCountFromStationNumberWhenMedicalRecordListIsEmpty_ShouldReturnUncompletedFirestationDTO() {
+    public void testGetPersonsAndCountFromStationNumberWhenMedicalRecordListIsEmpty_ShouldReturnNull() {
         when(firestationRepository.findAllByStationNumber(any())).thenReturn(addressList1);
         when(personRepository.findAllByAddressList(any())).thenReturn(firestationPersonDTOList1);
         when(medicalRecordRepository.findAllByName(any())).thenReturn(new ArrayList<>());
 
-        FirestationDTO returnedfirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
+        FirestationDTO returnedFirestationDTO = urlService.getPersonsAndCountFromStationNumber("1");
         verify(personRepository, Mockito.times(1)).findAllByAddressList(any());
         verify(medicalRecordRepository, Mockito.times(1)).findAllByName(any());
-        assertEquals(returnedfirestationDTO.getAdultCount(), 0);
-        assertEquals(returnedfirestationDTO.getChildrenCount(), 0);
+        assertThat(returnedFirestationDTO).isNull();
     }
+
+
+    // tests getChildrenAndFamilyMembersFromAddress
 
     @Test
     public void testGetChildrenAndFamilyMembersFromAddress_ShouldReturnChildAlertDTO() {
@@ -172,53 +180,26 @@ public class URLServiceTests {
     }
 
     @Test
-    public void testGetChildrenAndFamilyMembersFromAddressWhenPersonListIsEmpty_ShouldReturnEmptyObject() {
+    public void testGetChildrenAndFamilyMembersFromAddressWhenPersonListIsEmpty_ShouldReturnNull() {
         when(personRepository.findAllByAddress(any())).thenReturn(new ArrayList<>());
 
         ChildAlertDTO returnedChildAlertDTO = urlService.getChildrenAndFamilyMembersFromAddress("644 Gershwin Cir");
         verify(medicalRecordRepository, Mockito.times(0)).findAllByNames(any());
-        assertThat(returnedChildAlertDTO.getChildrenList()).isNull();
-        assertThat(returnedChildAlertDTO.getAdultList()).isNull();
+        assertThat(returnedChildAlertDTO).isNull();
     }
 
     @Test
-    public void testGetChildrenAndFamilyMembersFromAddressWhenMedicalRecordListIsEmpty_ShouldReturnEmptyObject() {
+    public void testGetChildrenAndFamilyMembersFromAddressWhenMedicalRecordListIsEmpty_ShouldReturnNull() {
         when(personRepository.findAllByAddress(any())).thenReturn(personList1);
         when(medicalRecordRepository.findAllByNames(any())).thenReturn(new ArrayList<>());
 
         ChildAlertDTO returnedChildAlertDTO = urlService.getChildrenAndFamilyMembersFromAddress("644 Gershwin Cir");
         verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedChildAlertDTO.getChildrenList()).isNull();
-        assertThat(returnedChildAlertDTO.getAdultList()).isNull();
+        assertThat(returnedChildAlertDTO).isNull();
     }
 
-    @Test
-    public void testGetChildrenAndFamilyMembersFromAddressWhenFirstnamesNotEqual_ShouldReturnEmptyLists() {
-        List<Person> personList = List.of(new Person[]{
-                new Person("John", "Duncan", "644 Gershwin Cir", "Culver", "97451",  "841-874-6512", "jaboyd@email.com")
-        });
-        when(personRepository.findAllByAddress(any())).thenReturn(personList);
-        when(medicalRecordRepository.findAllByNames(any())).thenReturn(medicalRecordList2);
 
-        ChildAlertDTO returnedChildAlertDTO = urlService.getChildrenAndFamilyMembersFromAddress("644 Gershwin Cir");
-        verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedChildAlertDTO.getChildrenList()).isEmpty();
-        assertThat(returnedChildAlertDTO.getAdultList()).isEmpty();
-    }
-
-    @Test
-    public void testGetChildrenAndFamilyMembersFromAddressWhenLastnamesNotEqual_ShouldReturnEmptyObject() {
-        List<Person> personList = List.of(new Person[]{
-                new Person("Peter", "Boyd", "644 Gershwin Cir", "Culver", "97451",  "841-874-6512", "jaboyd@email.com")
-        });
-        when(personRepository.findAllByAddress(any())).thenReturn(personList);
-        when(medicalRecordRepository.findAllByNames(any())).thenReturn(medicalRecordList2);
-
-        ChildAlertDTO returnedChildAlertDTO = urlService.getChildrenAndFamilyMembersFromAddress("644 Gershwin Cir");
-        verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedChildAlertDTO.getChildrenList()).isEmpty();
-        assertThat(returnedChildAlertDTO.getAdultList()).isEmpty();
-    }
+    // test getResidentsMedicalHistoryFromAddress
 
     @Test
     public void testGetResidentsMedicalHistoryFromAddress_ShouldReturnFireDTO() {
@@ -234,71 +215,37 @@ public class URLServiceTests {
     }
 
     @Test
-    public void testGetResidentsMedicalHistoryFromAddressWhenFirestationIsNull_ShouldReturnEmptyObject() {
+    public void testGetResidentsMedicalHistoryFromAddressWhenFirestationIsNull_ShouldReturnNull() {
         when(personRepository.findAllByAddress(any())).thenReturn(personList1);
         when(firestationRepository.findOneByAddress(any())).thenReturn(null);
 
         FireDTO returnedFireDTO = urlService.getResidentsMedicalHistoryFromAddress("644 Gershwin Cir");
         verify(medicalRecordRepository, Mockito.times(0)).findAllByNames(any());
-        assertThat(returnedFireDTO.getPersonMedicalHistoryDTOList()).isNull();
-        assertThat(returnedFireDTO.getStation()).isNull();
+        assertThat(returnedFireDTO).isNull();
     }
 
     @Test
-    public void testGetResidentsMedicalHistoryFromAddressWhenPersonListIsEmpty_ShouldReturnEmptyObject() {
+    public void testGetResidentsMedicalHistoryFromAddressWhenPersonListIsEmpty_ShouldReturnNull() {
         when(personRepository.findAllByAddress(any())).thenReturn(new ArrayList<>());
 
         FireDTO returnedFireDTO = urlService.getResidentsMedicalHistoryFromAddress("644 Gershwin Cir");
         verify(medicalRecordRepository, Mockito.times(0)).findAllByNames(any());
-        assertThat(returnedFireDTO.getPersonMedicalHistoryDTOList()).isNull();
-        assertThat(returnedFireDTO.getStation()).isNull();
+        assertThat(returnedFireDTO).isNull();
     }
 
     @Test
-    public void testGetResidentsMedicalHistoryFromAddressWhenMedicalRecordListIsEmpty_ShouldReturnEmptyObject() {
+    public void testGetResidentsMedicalHistoryFromAddressWhenMedicalRecordListIsEmpty_ShouldReturnNull() {
         when(personRepository.findAllByAddress(any())).thenReturn(personList1);
         when(firestationRepository.findOneByAddress(any())).thenReturn(firestation1);
         when(medicalRecordRepository.findAllByNames(any())).thenReturn(new ArrayList<>());
 
         FireDTO returnedFireDTO = urlService.getResidentsMedicalHistoryFromAddress("644 Gershwin Cir");
         verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedFireDTO.getPersonMedicalHistoryDTOList()).isNull();
-        assertThat(returnedFireDTO.getStation()).isNull();
+        assertThat(returnedFireDTO).isNull();
     }
 
-    @Test
-    public void testGetResidentsMedicalHistoryFromAddressWhenFirstnamesNotEqual_ShouldReturnEmptyObject() {
-        List<MedicalRecord> medicalRecordList = List.of(
-                new MedicalRecord[] {
-                        new MedicalRecord("John", "Duncan", "09/06/2000", List.of(), List.of("shellfish")),
-                }
-        );
-        when(personRepository.findAllByAddress(any())).thenReturn(personList1);
-        when(firestationRepository.findOneByAddress(any())).thenReturn(firestation1);
-        when(medicalRecordRepository.findAllByNames(any())).thenReturn(medicalRecordList);
 
-        FireDTO returnedFireDTO = urlService.getResidentsMedicalHistoryFromAddress("644 Gershwin Cir");
-        verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedFireDTO.getPersonMedicalHistoryDTOList()).isEmpty();
-        assertEquals(returnedFireDTO.getStation(), "1");
-    }
-
-    @Test
-    public void testGetResidentsMedicalHistoryFromAddressWhenLastnamesNotEqual_ShouldReturnEmptyObject() {
-        List<MedicalRecord> medicalRecordList = List.of(
-                new MedicalRecord[] {
-                        new MedicalRecord("Peter", "Boyd", "09/06/2000", List.of(), List.of("shellfish")),
-                }
-        );
-        when(personRepository.findAllByAddress(any())).thenReturn(personList1);
-        when(firestationRepository.findOneByAddress(any())).thenReturn(firestation1);
-        when(medicalRecordRepository.findAllByNames(any())).thenReturn(medicalRecordList);
-
-        FireDTO returnedFireDTO = urlService.getResidentsMedicalHistoryFromAddress("644 Gershwin Cir");
-        verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedFireDTO.getPersonMedicalHistoryDTOList()).isEmpty();
-        assertEquals(returnedFireDTO.getStation(), "1");
-    }
+    // test getHomeListFromFirestationNumbers
 
     @Test
     public void testGetHomeListFromFirestationNumbers_ShouldReturnFloodDTOList() {
@@ -309,7 +256,6 @@ public class URLServiceTests {
         when(medicalRecordRepository.findAllByNames(any())).thenReturn(medicalRecordList);
 
         List<FloodDTO> returnedFloodDTOList = urlService.getHomeListFromFirestationNumbers(List.of("1"));
-        System.out.println(returnedFloodDTOList);
         assertEquals(returnedFloodDTOList.get(0).getStation(), "1");
         assertEquals(returnedFloodDTOList.get(0).getFloodAddressDTOList().get(0).getAddress(), "644 Gershwin Cir");
         assertEquals(returnedFloodDTOList.get(0).getFloodAddressDTOList().get(0).getPersonMedicalHistoryDTOList().size(), 1);
@@ -317,23 +263,26 @@ public class URLServiceTests {
     }
 
     @Test
-    public void testGetHomeListFromFirestationNumbersWhenPersonListIsEmpty_ShouldReturnPersonNull() {
+    public void testGetHomeListFromFirestationNumbersWhenPersonListIsEmpty_ShouldReturnNull() {
         when(firestationRepository.findAllByStationNumber(any())).thenReturn(addressList2);
         when(personRepository.findAllByAddress(any())).thenReturn(new ArrayList<>());
 
         List<FloodDTO> returnedFloodDTOList = urlService.getHomeListFromFirestationNumbers(List.of("1"));
-        assertThat(returnedFloodDTOList.get(0).getFloodAddressDTOList().get(0).getPersonMedicalHistoryDTOList()).isNull();
+        assertThat(returnedFloodDTOList).isNull();
     }
 
     @Test
-    public void testGetHomeListFromFirestationNumbersWhenMedicalRecordListIsEmpty_ShouldReturnPersonNull() {
+    public void testGetHomeListFromFirestationNumbersWhenMedicalRecordListIsEmpty_ShouldReturnNull() {
         when(firestationRepository.findAllByStationNumber(any())).thenReturn(addressList2);
         when(personRepository.findAllByAddress(any())).thenReturn(personList1);
         when(medicalRecordRepository.findAllByNames(any())).thenReturn(new ArrayList<>());
 
         List<FloodDTO> returnedFloodDTOList = urlService.getHomeListFromFirestationNumbers(List.of("1"));
-        assertThat(returnedFloodDTOList.get(0).getFloodAddressDTOList().get(0).getPersonMedicalHistoryDTOList()).isNull();
+        assertThat(returnedFloodDTOList).isNull();
     }
+
+
+    // test getPhoneListFromFirestationNumber
 
     @Test
     public void testGetPhoneListFromFirestationNumber_ShouldReturnFirestationNumber() {
@@ -364,6 +313,9 @@ public class URLServiceTests {
         assertThat(returnedPhoneList).isEmpty();
     }
 
+
+    // test getInformationAndMedicalHistoryFromFullName
+
     @Test
     public void testGetInformationAndMedicalHistoryFromFullName_ShouldReturnListPersonInfoDTO() {
         when(personRepository.findAllByFullName(any(), any())).thenReturn(personList1);
@@ -379,7 +331,7 @@ public class URLServiceTests {
         when(personRepository.findAllByFullName(any(), any())).thenReturn(new ArrayList<>());
 
         List<PersonInfoDTO> returnedPersonInfoDTOList = urlService.getInformationAndMedicalHistoryFromFullName("Peter", "Duncan");
-        assertThat(returnedPersonInfoDTOList).isEmpty();
+        assertThat(returnedPersonInfoDTOList).isNull();
     }
 
     @Test
@@ -389,8 +341,11 @@ public class URLServiceTests {
 
         List<PersonInfoDTO> returnedPersonInfoDTOList = urlService.getInformationAndMedicalHistoryFromFullName("Peter", "Duncan");
         verify(medicalRecordRepository, Mockito.times(1)).findAllByNames(any());
-        assertThat(returnedPersonInfoDTOList).isEmpty();
+        assertThat(returnedPersonInfoDTOList).isNull();
     }
+
+
+    // test getAllEmailsFromCity
 
     @Test
     public void testGetAllEmailsFromCity_ShouldReturnAnEmailList() {

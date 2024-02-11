@@ -43,7 +43,7 @@ public class PersonRepository {
         return fetchedPerson;
     }
 
-    public Person findByFullName(String firstName, String lastName) {
+    public Person findByFullName(String lastName, String firstName) {
         return dataModel.getPersons().stream()
                 .filter(person -> (
                         person.getFirstName().equals(firstName) && person.getLastName().equals(lastName))

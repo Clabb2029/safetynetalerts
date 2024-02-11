@@ -19,6 +19,7 @@ public class PersonController {
 
     @GetMapping("/persons")
     public ResponseEntity<List<Person>> getAllPerson(){
+        logger.info("Person list requested.");
         List<Person> returnedPersonList = personService.getAllPersons();
         if(!returnedPersonList.isEmpty()) {
             logger.info("Person list fetched successfully.");
@@ -31,6 +32,7 @@ public class PersonController {
 
     @PostMapping("/persons")
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+        logger.info("Creation of person requested with the name: " + person.getFirstName() + " " + person.getLastName() + ".");
         Person returnedPerson = personService.createPerson(person);
         if(returnedPerson != null) {
             logger.info("Person created successfully.");
@@ -43,6 +45,7 @@ public class PersonController {
 
     @PutMapping("/persons/{lastName}/{firstName}")
     public ResponseEntity<Person> updatePerson(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody Person person) {
+        logger.info("Person modification requested for: " + firstName + " " + lastName + ".");
         Person returnedPerson = personService.updatePerson(lastName, firstName, person);
         if (returnedPerson != null) {
             logger.info("Person updated successfully.");
@@ -55,6 +58,7 @@ public class PersonController {
 
     @DeleteMapping("/persons/{lastName}/{firstName}")
     public ResponseEntity<Boolean> deletePerson(@PathVariable("lastName") String lastName, @PathVariable("firstName") String firstName){
+        logger.info("Person deletion requested for: " + firstName + " " + lastName + ".");
         boolean isPersonDeleted = personService.deletePerson(lastName, firstName);
         if (isPersonDeleted) {
             logger.info("Person deleted successfully.");

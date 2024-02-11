@@ -19,6 +19,7 @@ public class MedicalRecordController {
 
     @GetMapping("/medicalRecords")
     public ResponseEntity<List<MedicalRecord>> getAllMedicalRecords() {
+        logger.info("Medical record list requested.");
         List<MedicalRecord> returnedMedicalRecordList = medicalRecordService.getAllMedicalRecords();
         if(!returnedMedicalRecordList.isEmpty()) {
             logger.info("Medical record list fetched successfully.");
@@ -31,6 +32,7 @@ public class MedicalRecordController {
 
     @PostMapping("/medicalRecords")
     public ResponseEntity<MedicalRecord> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
+        logger.info("Creation of medical record requested for: " + medicalRecord.getFirstName() + " " + medicalRecord.getLastName() + ".");
         MedicalRecord returnedMedicalRecord = medicalRecordService.createMedicalRecord(medicalRecord);
         if(returnedMedicalRecord != null) {
             logger.info("Medical record created successfully.");
@@ -43,6 +45,7 @@ public class MedicalRecordController {
 
     @PutMapping("/medicalRecords/{lastName}/{firstName}")
     public ResponseEntity<MedicalRecord> updateMedicalRecord(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName, @RequestBody MedicalRecord medicalRecord) {
+        logger.info("Medical record modification requested for: " + firstName + " " + lastName + ".");
         MedicalRecord returnedMedicalRecord = medicalRecordService.updateMedicalRecord(lastName, firstName, medicalRecord);
         if(returnedMedicalRecord != null) {
             logger.info("Medical record updated successfully.");
@@ -55,6 +58,7 @@ public class MedicalRecordController {
 
     @DeleteMapping("/medicalRecords/{lastName}/{firstName}")
     public ResponseEntity<Boolean> deleteMedicalRecord(@PathVariable("lastName") String lastName,@PathVariable("firstName") String firstName){
+        logger.info("Medical record deletion requested for: " + firstName + " " + lastName + ".");
         boolean isMedicalRecordDeleted = medicalRecordService.deleteMedicalRecord(lastName, firstName);
         if (isMedicalRecordDeleted) {
             logger.info("Medical record deleted successfully.");

@@ -44,22 +44,22 @@ public class FirestationControllerTests {
     }
 
 
-    //GetFirestations
+    // tests getAllFirestations
 
     @Test
-    public void testGetFirestations_ShouldReturnFirestationList() throws Exception {
+    public void testGetAllFirestations_ShouldReturnFirestationList() throws Exception {
         when(firestationService.getAllFirestations()).thenReturn(firestationList);
         mockMvc.perform(get("/firestations")).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetFirestationsWhenEmptyList_ShouldReturnNotFound() throws Exception {
+    public void testGetAllFirestationsWhenEmptyList_ShouldReturnNotFound() throws Exception {
         when(firestationService.getAllFirestations()).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/firestations")).andExpect(status().isNotFound());
     }
 
 
-    //CreateFirestation
+    // tests createFirestation
 
     @Test
     public void testWhenCreateFirestationWentGood_ShouldReturnFirestation() throws Exception {
@@ -90,10 +90,10 @@ public class FirestationControllerTests {
     }
 
 
-    // UpdateFirestation
+    // tests updateFirestationStation
 
     @Test
-    public void testUpdateWhenFirestationFound_ShouldReturnFirestation() throws Exception {
+    public void testUpdateFirestationStationWhenFirestationFound_ShouldReturnFirestation() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Firestation firestation = new Firestation();
         firestation.setAddress("1509 Culver St");
@@ -107,7 +107,7 @@ public class FirestationControllerTests {
     }
 
     @Test
-    public void testUpdateWhenFirestationNotFound_ShouldReturnNull() throws Exception {
+    public void testUpdateFirestationStationWhenFirestationNotFound_ShouldReturnNull() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Firestation firestation = new Firestation();
         firestation.setAddress("1509 Culver St");
@@ -121,17 +121,17 @@ public class FirestationControllerTests {
     }
 
 
-    // deleteFirestation
+    // tests deleteFirestation
 
     @Test
-    public void testDeleteWhenFirestationFound_ShouldReturnTrue() throws Exception {
+    public void testDeleteFirestationWhenFirestationFound_ShouldReturnTrue() throws Exception {
         when(firestationService.deleteFirestation(any(), any())).thenReturn(true);
         mockMvc.perform(delete("/firestations/1509 Culver Street/3"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testDeleteWhenFirestationNotFound_ShouldReturnNotFound() throws Exception {
+    public void testDeleteFirestationWhenFirestationNotFound_ShouldReturnNotFound() throws Exception {
         when(firestationService.deleteFirestation(any(), any())).thenReturn(false);
         mockMvc.perform(delete("/firestations/1509 Culver Street/5"))
                 .andExpect(status().isNotFound());

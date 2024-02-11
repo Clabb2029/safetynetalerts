@@ -28,8 +28,11 @@ public class MedicalRecordServiceTests {
     @Mock
     private MedicalRecordRepository medicalRecordRepository;
 
+
+    // tests getAllMedicalRecords
+
     @Test
-    public void testGetAllFirestations_ShouldReturnMedicalRecordList() {
+    public void testGetAllMedicalRecords_ShouldReturnMedicalRecordList() {
         List<MedicalRecord> medicalRecordList = List.of(new MedicalRecord[] {
                 new MedicalRecord("John", "Boyd", "03/06/1984", List.of("aznol:350mg", "hydrapermazol:100mg"), List.of("nillacilan")),
                 new MedicalRecord("Jacob", "Boyd", "03/06/1989", List.of("pharmacol:5000mg", "terazine:10mg", "noznazol:250mg"), List.of())
@@ -40,11 +43,14 @@ public class MedicalRecordServiceTests {
     }
 
     @Test
-    public void testGetAllFirestationsWhenEmptyListReturned_ShouldReturnEmptyList() {
+    public void testGetAllMedicalRecordsWhenEmptyListReturned_ShouldReturnEmptyList() {
         when(medicalRecordRepository.findAll()).thenReturn(new ArrayList<>());
         List<MedicalRecord> fetchedMedicalRecordList = medicalRecordService.getAllMedicalRecords();
         assertEquals(0, fetchedMedicalRecordList.size());
     }
+
+
+    // tests createMedicalRecord
 
     @Test
     public void testCreateMedicalRecord_ShouldReturnMedicalRecord() {
@@ -66,6 +72,9 @@ public class MedicalRecordServiceTests {
         assertThat(fetchedMedicalRecord).isNull();
     }
 
+
+    // tests updateMedicalRecord
+
     @Test
     public void testUpdateMedicalRecord_ShouldReturnMedicalRecord() {
         MedicalRecord medicalRecord = new MedicalRecord("John", "Boyd", "03/06/1984", List.of("aznol:350mg", "hydrapermazol:100mg"), List.of("nillacilan"));
@@ -85,6 +94,9 @@ public class MedicalRecordServiceTests {
         MedicalRecord fetchedMedicalRecord = medicalRecordService.updateMedicalRecord(medicalRecord.getLastName(), medicalRecord.getFirstName(), medicalRecord);
         assertThat(fetchedMedicalRecord).isNull();
     }
+
+
+    // tests deleteMedicalRecord
 
     @Test
     public void testDeleteMedicalRecord_ShouldReturnTrue() {

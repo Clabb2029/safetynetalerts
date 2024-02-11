@@ -58,8 +58,14 @@ public class URLService {
                     }
                     firestationDTO.setAdultCount(adultCount);
                     firestationDTO.setChildrenCount(childrenCount);
+                } else {
+                    return null;
                 }
+            } else {
+                return null;
             }
+        } else {
+            return null;
         }
         return firestationDTO;
     }
@@ -90,7 +96,11 @@ public class URLService {
                 }
                 childAlertDTO.setChildrenList(childrenList);
                 childAlertDTO.setAdultList(adultList);
+            } else {
+                return null;
             }
+        } else {
+            return null;
         }
         return childAlertDTO;
     }
@@ -132,7 +142,11 @@ public class URLService {
                     fireDTO.setPersonMedicalHistoryDTOList(personMedicalHistoryDTOList);
                     fireDTO.setStation(firestation.getStation());
                 }
+            } else {
+                return null;
             }
+        } else {
+            return null;
         }
         return fireDTO;
     }
@@ -169,10 +183,16 @@ public class URLService {
                                 FirePersonDTO firePersonDTO = new FirePersonDTO(personList.get(i).getFirstName(), personList.get(i).getLastName(), personList.get(i).getPhone(), age, filteredMedicalRecord.getMedications(), filteredMedicalRecord.getAllergies());
                                 personMedicalHistoryDTOList.add(firePersonDTO);
                                 medicalRecordList.remove(filteredMedicalRecord);
+                            } else {
+                                return null;
                             }
                         }
                         floodAddressDTO.setPersonMedicalHistoryDTOList(personMedicalHistoryDTOList);
+                    } else {
+                        return null;
                     }
+                } else {
+                    return null;
                 }
                 floodAddressDTOList.add(floodAddressDTO);
             }
@@ -193,6 +213,8 @@ public class URLService {
                 PersonInfoDTO personInfoDTO = new PersonInfoDTO(personList.get(i).getFirstName(), personList.get(i).getLastName(), personList.get(i).getAddress(), age, personList.get(i).getEmail(), medicalRecordList.get(i).getMedications(), medicalRecordList.get(i).getAllergies());
                 personInfoDTOList.add(personInfoDTO);
             }
+        } else {
+            return null;
         }
         return personInfoDTOList;
     }

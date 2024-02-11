@@ -30,6 +30,9 @@ public class URLControllerTests {
     @MockBean
     private static URLService urlService;
 
+
+    // tests getPersonsAndCountFromStationNumber
+
     @Test
     public void testGetFirestation_ShouldReturnFirestation() throws Exception {
         FirestationDTO firestationDTO = new FirestationDTO(
@@ -48,10 +51,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetFirestationWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
-        when(urlService.getPersonsAndCountFromStationNumber(any())).thenReturn(new FirestationDTO());
+    public void testGetFirestationWhenResponseIsNull_ShouldReturnInternalServerError() throws Exception {
+        when(urlService.getPersonsAndCountFromStationNumber(any())).thenReturn(null);
         mockMvc.perform(get("/firestation?station_number=1")).andExpect(status().isInternalServerError());
     }
+
+
+    // tests getChildrenAndFamilyMembersFromAddress
 
     @Test
     public void testGetChildAlert_ShouldReturnChildAlertDTO() throws Exception {
@@ -69,10 +75,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetChildAlertWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
-        when(urlService.getChildrenAndFamilyMembersFromAddress(any())).thenReturn(new ChildAlertDTO());
-        mockMvc.perform(get("/phoneAlert?firestation_number=4")).andExpect(status().isInternalServerError());
+    public void testGetChildAlertWhenResponseIsNull_ShouldReturnInternalServerError() throws Exception {
+        when(urlService.getChildrenAndFamilyMembersFromAddress(any())).thenReturn(null);
+        mockMvc.perform(get("/childAlert?address=892 Downing Ct")).andExpect(status().isInternalServerError());
     }
+
+
+    // tests getPhoneListFromFirestationNumber
 
     @Test
     public void testGetPhoneAlert_ShouldReturnPhoneList() throws Exception {
@@ -86,6 +95,9 @@ public class URLControllerTests {
         when(urlService.getPhoneListFromFirestationNumber(any())).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/phoneAlert?firestation_number=4")).andExpect(status().isInternalServerError());
     }
+
+
+    // tests getResidentsMedicalHistoryFromAddress
 
     @Test
     public void testGetFire_ShouldReturnFireDTO() throws Exception {
@@ -101,10 +113,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetFireWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
-        when(urlService.getResidentsMedicalHistoryFromAddress(any())).thenReturn(new FireDTO());
+    public void testGetFireWhenResponseIsNull_ShouldReturnInternalServerError() throws Exception {
+        when(urlService.getResidentsMedicalHistoryFromAddress(any())).thenReturn(null);
         mockMvc.perform(get("/fire?address=892 Downing Ct")).andExpect(status().isInternalServerError());
     }
+
+
+    // tests getHomeListFromFirestationNumbers
 
     @Test
     public void testGetFlood_ShouldReturnFloodDTOList() throws Exception {
@@ -127,10 +142,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetFloodWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
-        when(urlService.getHomeListFromFirestationNumbers(any())).thenReturn(new ArrayList<>());
+    public void testGetFloodWhenResponseIsNull_ShouldReturnInternalServerError() throws Exception {
+        when(urlService.getHomeListFromFirestationNumbers(any())).thenReturn(null);
         mockMvc.perform(get("/flood/stations?stations=4")).andExpect(status().isInternalServerError());
     }
+
+
+    // tests getInformationAndMedicalHistoryFromFullName
 
     @Test
     public void testGetPersonInfo_ShouldReturnPersonInfoDTOList() throws Exception {
@@ -142,10 +160,13 @@ public class URLControllerTests {
     }
 
     @Test
-    public void testGetPersonInfoWhenResponseIsEmpty_ShouldReturnInternalServerError() throws Exception {
-        when(urlService.getInformationAndMedicalHistoryFromFullName(any(), any())).thenReturn(new ArrayList<>());
+    public void testGetPersonInfoWhenResponseIsNull_ShouldReturnInternalServerError() throws Exception {
+        when(urlService.getInformationAndMedicalHistoryFromFullName(any(), any())).thenReturn(null);
         mockMvc.perform(get("/personInfo?firstName=John&lastName=Boyd")).andExpect(status().isInternalServerError());
     }
+
+
+    // tests getAllEmailsFromCity
 
     @Test
     public void testGetCommunityEmail_ShouldReturnEmailList() throws Exception {

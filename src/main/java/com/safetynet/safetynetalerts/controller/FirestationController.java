@@ -18,7 +18,8 @@ public class FirestationController {
     private static final Logger logger = LogManager.getLogger(FirestationController.class);
 
     @GetMapping("/firestations")
-    public ResponseEntity<List<Firestation>> getFirestations(){
+    public ResponseEntity<List<Firestation>> getAllFirestations(){
+        logger.info("Firestation list requested.");
         List<Firestation> returnedFirestationList = firestationService.getAllFirestations();
         if(!returnedFirestationList.isEmpty()) {
             logger.info("Firestation list fetched successfully.");
@@ -31,6 +32,7 @@ public class FirestationController {
 
     @PostMapping("/firestations")
     public ResponseEntity<Firestation> createFirestation(@RequestBody Firestation firestation) {
+        logger.info("Creation of firestation requested. Address: " + firestation.getAddress() + ", station: " + firestation.getStation() + ".");
         Firestation returnedFirestation = firestationService.createFirestation(firestation);
         if(returnedFirestation != null) {
             logger.info("Firestation created successfully.");
@@ -43,6 +45,7 @@ public class FirestationController {
 
     @PutMapping("/firestations/{address}")
     public ResponseEntity<Firestation> updateFirestationStation(@PathVariable String address, @RequestBody Firestation firestation) {
+        logger.info("Firestation modification requested for this address: " + address + ".");
         Firestation returnedFirestation = firestationService.updateFirestationStation(address, firestation);
         if (returnedFirestation != null) {
             logger.info("Firestation updated successfully.");
@@ -55,6 +58,7 @@ public class FirestationController {
 
     @DeleteMapping("/firestations/{address}/{station}")
     public ResponseEntity<Boolean> deleteFirestation(@PathVariable String address, @PathVariable String station){
+        logger.info("Firestation deletion requested for address: " + address + " and station: " + station + ".");
         boolean isFirestationDeleted = firestationService.deleteFirestation(address, station);
         if (isFirestationDeleted) {
             logger.info("Firestation deleted successfully.");

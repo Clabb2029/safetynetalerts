@@ -45,22 +45,22 @@ public class PersonControllerTests {
     }
 
 
-    // Get Persons
+    // tests getAllPersons
 
     @Test
-    public void testGetPersons_ShouldReturnPersonList() throws Exception {
+    public void testGetAllPersons_ShouldReturnPersonList() throws Exception {
         when(personService.getAllPersons()).thenReturn(personList);
         mockMvc.perform(get("/persons")).andExpect(status().isOk());
     }
 
     @Test
-    public void testGetPersonsWhenEmptyList_ShouldReturnNotFound() throws Exception {
+    public void testGetAllPersonsWhenEmptyList_ShouldReturnNotFound() throws Exception {
         when(personService.getAllPersons()).thenReturn(new ArrayList<>());
         mockMvc.perform(get("/persons")).andExpect(status().isNotFound());
     }
 
 
-    // Create Person
+    // tests createPerson
 
     @Test
     public void testWhenCreatePersonWentGood_ShouldReturnPerson() throws Exception {
@@ -99,10 +99,10 @@ public class PersonControllerTests {
     }
 
 
-    // Create Person
+    // tests updatePerson
 
     @Test
-    public void testUpdateWhenPersonFound_ShouldReturnPerson() throws Exception {
+    public void testUpdatePersonWhenPersonFound_ShouldReturnPerson() throws Exception {
         Person person = new Person();
         person.setFirstName("Tenley");
         person.setLastName("Boyd");
@@ -120,7 +120,7 @@ public class PersonControllerTests {
     }
 
     @Test
-    public void testUpdateWhenPersonNotFound_ShouldReturnInternalServerError() throws Exception {
+    public void testUpdatePersonWhenPersonNotFound_ShouldReturnInternalServerError() throws Exception {
         Person person = new Person();
         person.setFirstName("Tenley");
         person.setLastName("Boyd");
@@ -138,17 +138,17 @@ public class PersonControllerTests {
     }
 
 
-    // Delete Person
+    // tests deletePerson
 
     @Test
-    public void testDeleteWhenPersonFound_ShouldReturnOk() throws Exception {
+    public void testDeletePersonWhenPersonFound_ShouldReturnOk() throws Exception {
         when(personService.deletePerson(any(), any())).thenReturn(true);
         mockMvc.perform(delete("/persons/Boyd/John"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testDeleteWhenPersonNotFound_ShouldReturnNotFound() throws Exception {
+    public void testDeletePersonWhenPersonNotFound_ShouldReturnNotFound() throws Exception {
         when(personService.deletePerson(any(), any())).thenReturn(false);
         mockMvc.perform(delete("/persons/Boyd/John"))
                 .andExpect(status().isNotFound());

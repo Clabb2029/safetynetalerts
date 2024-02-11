@@ -28,6 +28,9 @@ public class PersonServiceTests {
     @Mock
     private PersonRepository personRepository;
 
+
+    // tests getAllPersons
+
     @Test
     public void testGetAllPersons_ShouldReturnPersonList() {
         List<Person> personList = List.of(new Person[] {
@@ -45,6 +48,9 @@ public class PersonServiceTests {
         List<Person> fetchedPersonList = personService.getAllPersons();
         assertEquals(0, fetchedPersonList.size());
     }
+
+
+    // tests createPerson
 
     @Test
     public void testCreatePerson_ShouldReturnPerson() {
@@ -68,6 +74,9 @@ public class PersonServiceTests {
         assertThat(fetchedPerson).isNull();
     }
 
+
+    // tests updatePerson
+
     @Test
     public void testUpdatePerson_ShouldReturnPerson() {
         Person person = new Person("John", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6512", "jaboyd@email.com");
@@ -89,6 +98,9 @@ public class PersonServiceTests {
         Person fetchedPerson = personService.updatePerson(person.getLastName(), person.getFirstName(), person);
         assertThat(fetchedPerson).isNull();
     }
+
+
+    // tests deletePerson
 
     @Test
     public void testDeletePerson_ShouldReturnTrue() {

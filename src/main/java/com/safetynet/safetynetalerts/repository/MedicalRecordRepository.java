@@ -40,7 +40,7 @@ public class MedicalRecordRepository {
         return fetchedMedicalRecord;
     }
 
-    public MedicalRecord findByFullName(String firstName, String lastName) {
+    public MedicalRecord findByFullName(String lastName, String firstName) {
         return dataModel.getMedicalRecords().stream()
                 .filter(medicalRecord -> (
                         medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName))

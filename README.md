@@ -1,4 +1,4 @@
-# Safety Net Alerts
+# SafetyNet Alerts
 
 API that allows sending information to emergency service systems to give them the means to better prepare and understand all situations.
 
@@ -51,12 +51,12 @@ This url returns a list of telephone numbers of residents served by the fire sta
 
 ### http://localhost:8080/fire?address=<address>
 
-This url returns the list of inhabitants living at the given addresse and the number of the fire station serving it. The list includes each person’s last name, first name, phone number, age and medical history.
+This url returns the list of inhabitants living at the given address and the number of the fire station serving it. The list includes each person’s last name, first name, phone number, age and medical history.
 
 
 ### http://localhost:8080/flood/stations?stations=<a_list_of_station_numbers>
 
-This url returns a list of all households served by the barracks. This list groups people by address. It also includes the name, first name, telephone number, age and background of each resident.
+This url returns a list of all households served by the firestations. This list groups people by address. It also includes the name, first name, telephone number, age and background of each resident.
 
 
 ### http://localhost:8080/personInfofirstName=<firstName>&lastName=<lastName>

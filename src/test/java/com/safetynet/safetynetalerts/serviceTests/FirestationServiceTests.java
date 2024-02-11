@@ -28,8 +28,11 @@ public class FirestationServiceTests {
     @Mock
     private static FirestationRepository firestationRepository;
 
+
+    // tests getAllFirestations
+
     @Test
-    public void testGetAllFirestation_ShouldReturnAFirestationList() {
+    public void testGetAllFirestations_ShouldReturnAFirestationList() {
         List<Firestation> firestationList = List.of(new Firestation[]{
                 new Firestation("1509 Culver St", "3"),
                 new Firestation("29 15th St", "2")
@@ -40,11 +43,14 @@ public class FirestationServiceTests {
     }
 
     @Test
-    public void testGetAllFirestationWhenEmptyListReturned_ShouldReturnEmptyList() {
+    public void testGetAllFirestationsWhenEmptyListReturned_ShouldReturnEmptyList() {
         when(firestationRepository.findAll()).thenReturn(new ArrayList<>());
         List<Firestation> fetchedFirestationList = firestationService.getAllFirestations();
         assertEquals(0, fetchedFirestationList.size());
     }
+
+
+    // tests createFirestation
 
     @Test
     public void testCreateFirestation_ShouldReturnFirestation() {
@@ -63,6 +69,9 @@ public class FirestationServiceTests {
         assertThat(fetchedFirestation).isNull();
     }
 
+
+    // tests updateFirestationStation
+
     @Test
     public void testUpdateFirestationStation_ShouldReturnFirestation() {
         Firestation firestation = new Firestation("1509 Culver St", "4");
@@ -79,6 +88,9 @@ public class FirestationServiceTests {
         Firestation fetchedFirestation = firestationService.updateFirestationStation(firestation.getAddress(), firestation);
         assertThat(fetchedFirestation).isNull();
     }
+
+
+    // tests deleteFirestation
 
     @Test
     public void testDeleteFirestation_ShouldReturnTrue() {
